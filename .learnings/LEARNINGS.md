@@ -1,0 +1,22 @@
+## [LRN-20260318-001] best_practice
+
+**Logged**: 2026-03-18T23:37:37Z
+**Priority**: high
+**Status**: pending
+**Area**: infra
+
+### Summary
+当前环境已存在可用于 GitHub SSH 推送的 `/root/.ssh/id_ed25519`，且用户已提前添加对应公钥，应优先使用 SSH remote 而不是 HTTPS。
+
+### Details
+用户明确说明曾为当前环境添加过公钥。检查确认 `/root/.ssh/id_ed25519.pub` 存在，公钥为 `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOizVbUBjeOsJfWTYwKCQJjcJZVEVdrR1CWDyDCEl9Vt ou_516544ee3139f1c48c9cf4c6136a7499@feishu`。因此 GitHub 仓库推送应优先切换为 SSH 协议，避免 HTTPS 凭证与网络层额外问题。
+
+### Suggested Action
+后续凡是 GitHub push/pull 场景，优先检查并复用现有 SSH key 与 SSH remote。
+
+### Metadata
+- Source: conversation
+- Related Files: .learnings/LEARNINGS.md
+- Tags: github, ssh, git
+
+---
