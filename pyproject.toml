@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ashare-strategy-tool"
+version = "0.1.0"
+description = "A-share strategy screening, backtesting, CLI and Streamlit UI tool"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "OpenAI Assistant"}]
+dependencies = [
+  "pandas>=2.1",
+  "numpy>=1.26",
+  "akshare>=1.14.0",
+  "backtrader>=1.9.78.123",
+  "typer>=0.12",
+  "rich>=13.7",
+  "streamlit>=1.33",
+  "plotly>=5.20",
+  "pydantic>=2.6",
+  "pyyaml>=6.0",
+  "loguru>=0.7"
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+ashare-strategy = "ashare_strategy.cli:app"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
