@@ -6,7 +6,7 @@
 - 自动抓取 A 股板块与个股行情数据（AkShare）
 - 参数化策略配置
 - 基于规则的选股、买入、卖出与持仓管理
-- 1 年期回测与沪深300对比
+- 逐日滚动回测、净值曲线、最大回撤与沪深300对比
 - CLI 命令行工具
 - Streamlit 可视化界面
 - 项目开发计划与功能进度文档
@@ -16,7 +16,7 @@
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .
-ashare-strategy backtest --days 250
+ashare-strategy backtest --mode rolling --export-csv trades.csv
 ashare-strategy ui
 ```
 
@@ -30,3 +30,15 @@ ashare-strategy ui
 1. 默认数据源为 `akshare`，不同接口字段可能随上游变化而调整。
 2. 板块成交量字段在不同数据源量纲可能不同，已参数化处理。
 3. 实盘下单接口未直接接券商，当前提供信号与模拟持仓管理框架，便于后续扩展。
+
+## CLI 示例
+```bash
+ashare-strategy screen
+ashare-strategy backtest --mode rolling
+ashare-strategy backtest --mode rolling --export-csv trades.csv
+ashare-strategy ui
+```
+
+## 当前能力边界
+- 当前实盘部分仍为模拟持仓/信号执行框架，未直连券商交易接口。
+- 回测为规则型日线回测，暂未计入手续费、滑点、涨跌停成交限制。

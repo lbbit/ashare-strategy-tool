@@ -106,3 +106,32 @@ Make akshare an optional runtime import inside provider methods or install it be
 - Related Files: src/ashare_strategy/data/provider.py, tests/test_selector_logic.py
 
 ---
+## [ERR-20260318-005] github_push_transport_auth
+
+**Logged**: 2026-03-18T16:40:20Z
+**Priority**: medium
+**Status**: pending
+**Area**: infra
+
+### Summary
+GitHub push initially failed due to missing HTTPS credential setup, then failed again due to HTTP2 transport error.
+
+### Error
+```
+fatal: could not read Username for 'https://github.com': No such device or address
+fatal: unable to access 'https://github.com/lbbit/ashare-strategy-tool.git/': Error in the HTTP2 framing layer
+```
+
+### Context
+- Repo created successfully with gh.
+- `gh auth setup-git` fixed credential helper issue.
+- Network/transport still unstable for push.
+
+### Suggested Fix
+Retry with HTTP/1.1, SSH remote, or a later network retry.
+
+### Metadata
+- Reproducible: unknown
+- Related Files: .learnings/ERRORS.md
+
+---

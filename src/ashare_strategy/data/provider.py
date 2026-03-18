@@ -6,10 +6,13 @@ from typing import Optional
 
 import pandas as pd
 
+from ashare_strategy.data.cache import CsvCache
+
 
 class AkshareProvider:
-    def __init__(self) -> None:
+    def __init__(self, cache_dir: str = ".cache/market_data", use_cache: bool = True) -> None:
         self._ak = None
+        self.cache = CsvCache(cache_dir, enabled=use_cache)
 
     def _akshare(self):
         if self._ak is None:
@@ -25,8 +28,10 @@ class AkshareProvider:
         return out
 
     def get_stock_daily(self, symbol: str, start_date: Optional[str] = None, end_date: Optional[str] = None) -> pd.DataFrame:
-        ak = self._akshare()
-        df = ak.stock_zh_a_hist(symbol=symbol, period="daily", adjust="qfq")
+        def fetch():
+            ak = self._akshare()
+            return ak.stock_zh_a_hist(symbol=symbol, period="daily", adjust="qfq")
+        df = self.cache.load_or_fetch(f"stock_daily_{symbol}", fetch)
         rename_map = {"日期": "date", "开盘": "open", "收盘": "close", "最高": "high", "最低": "low", "成交量": "volume", "涨跌幅": "pct_chg", "换手率": "turnover"}
         df = df.rename(columns=rename_map)
         df = self._normalize_dates(df)
@@ -38,31 +43,26 @@ class AkshareProvider:
 
     @lru_cache(maxsize=1)
     def get_spot(self) -> pd.DataFrame:
-        ak = self._akshare()
-        return ak.stock_zh_a_spot_em()
+        return self.cache.load_or_fetch("stock_spot", lambda: self._akshare().stock_zh_a_spot_em())
 
     def get_benchmark_daily(self, symbol: str = "sh000300") -> pd.DataFrame:
-        ak = self._akshare()
-        df = ak.index_zh_a_hist(symbol=symbol, period="daily")
+        df = self.cache.load_or_fetch(f"benchmark_{symbol}", lambda: self._akshare().index_zh_a_hist(symbol=symbol, period="daily"))
         df = df.rename(columns={"日期": "date", "开盘": "open", "收盘": "close", "最高": "high", "最低": "low", "成交量": "volume"})
         return self._normalize_dates(df)
 
     def get_board_names(self) -> pd.DataFrame:
         try:
-            ak = self._akshare()
-            return ak.stock_board_industry_name_em()
+            return self.cache.load_or_fetch("board_names", lambda: self._akshare().stock_board_industry_name_em())
         except Exception:
             return pd.DataFrame(columns=["板块名称"])
 
     def get_board_hist(self, board_name: str) -> pd.DataFrame:
-        ak = self._akshare()
-        df = ak.stock_board_industry_hist_em(symbol=board_name, adjust="")
+        df = self.cache.load_or_fetch(f"board_hist_{board_name}", lambda: self._akshare().stock_board_industry_hist_em(symbol=board_name, adjust=""))
         df = df.rename(columns={"日期": "date", "开盘": "open", "收盘": "close", "最高": "high", "最低": "low", "成交量": "volume"})
         return self._normalize_dates(df)
 
     def get_board_cons(self, board_name: str) -> pd.DataFrame:
-        ak = self._akshare()
-        return ak.stock_board_industry_cons_em(symbol=board_name)
+        return self.cache.load_or_fetch(f"board_cons_{board_name}", lambda: self._akshare().stock_board_industry_cons_em(symbol=board_name))
 
     def get_recent_trade_range(self, days: int = 365) -> tuple[str, str]:
         end = datetime.today().date()

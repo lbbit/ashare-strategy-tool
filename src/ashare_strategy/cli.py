@@ -32,12 +32,16 @@ def screen(config: str = typer.Option("config/default_strategy.yaml", help="配�
 
 
 @app.command()
-def backtest(config: str = typer.Option("config/default_strategy.yaml"), initial_capital: float = 1_000_000):
+def backtest(config: str = typer.Option("config/default_strategy.yaml"), initial_capital: float = 1_000_000, mode: str = typer.Option("rolling", help="rolling/simple"), export_csv: str = typer.Option("", help="导出交易结果 CSV 路径")):
     cfg = load_config(config)
     service = TradingService(cfg)
-    result = service.backtest(initial_capital=initial_capital)
+    result = service.backtest(initial_capital=initial_capital, mode=mode)
     print_json = json.dumps(result, ensure_ascii=False, indent=2, default=str)
     print(print_json)
+    if export_csv:
+        import pandas as pd
+        pd.DataFrame(result.get("trades", [])).to_csv(export_csv, index=False)
+        print(f"[green]交易结果已导出到 {export_csv}[/green]")
 
 
 @app.command()
