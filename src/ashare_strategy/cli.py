@@ -45,6 +45,23 @@ def backtest(config: str = typer.Option("config/default_strategy.yaml"), initial
 
 
 @app.command()
+def positions(config: str = typer.Option("config/default_strategy.yaml")):
+    cfg = load_config(config)
+    service = TradingService(cfg)
+    data = service.load_positions()
+    print(json.dumps(data, ensure_ascii=False, indent=2))
+
+
+@app.command()
+def save_sample_positions(config: str = typer.Option("config/default_strategy.yaml")):
+    cfg = load_config(config)
+    service = TradingService(cfg)
+    sample = [{"stock_code": "000001", "stock_name": "示例股票", "buy_date": "2026-03-18", "buy_price": 12.34, "shares": 1000}]
+    service.save_positions(sample)
+    print("[green]已写入示例持仓[/green]")
+
+
+@app.command()
 def ui():
     subprocess.run([sys.executable, "-m", "streamlit", "run", "src/ashare_strategy/ui/app.py"], check=False)
 

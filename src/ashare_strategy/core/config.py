@@ -30,6 +30,10 @@ class StrategyConfig(BaseModel):
     benchmark_symbol: str = "sh000300"
     exclude_st: bool = True
     board_name_keywords: list[str] = Field(default_factory=list)
+    commission_rate: float = 0.0003
+    stamp_duty_rate: float = 0.001
+    slippage_rate: float = 0.0005
+    position_store_path: str = "data/positions.json"
 
 
 def load_config(path: str | Path | None = None) -> StrategyConfig:
