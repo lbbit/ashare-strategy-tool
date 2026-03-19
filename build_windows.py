@@ -23,6 +23,7 @@ def main():
         '--collect-all', 'akshare',
         '--collect-all', 'streamlit',
         '--collect-all', 'tinyshare',
+        '--hidden-import', 'tinyshare',
         '--add-data', 'config/default_strategy.yaml;config',
         'src/ashare_strategy/cli.py'
     ], check=True, cwd=ROOT)

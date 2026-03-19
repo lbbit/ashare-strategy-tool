@@ -131,7 +131,7 @@ def plan(config: str = typer.Option("config/default_strategy.yaml"), output_dir:
 def positions(config: str = typer.Option("config/default_strategy.yaml"), output: str = typer.Option("text", help="输出格式：text/json")):
     cfg = load_config(config)
     service = TradingService(cfg)
-    data = service.load_positions()
+    data = service.load_account()
     if output == "json":
         print(json.dumps(success_response(data, message="positions loaded"), ensure_ascii=False, indent=2))
     else:
@@ -142,7 +142,7 @@ def positions(config: str = typer.Option("config/default_strategy.yaml"), output
 def save_sample_positions(config: str = typer.Option("config/default_strategy.yaml"), output: str = typer.Option("text", help="输出格式：text/json")):
     cfg = load_config(config)
     service = TradingService(cfg)
-    sample = [{"stock_code": "000001", "stock_name": "示例股票", "buy_date": "2026-03-18", "buy_price": 12.34, "shares": 1000}]
+    sample = [{"stock_code": "000001", "stock_name": "示例股票", "buy_date": "2026-03-18", "buy_price": 12.34, "shares": 1000, "available_shares": 1000, "latest_price": 12.5}]
     service.save_positions(sample)
     if output == "json":
         print(json.dumps(success_response(sample, message="sample positions saved"), ensure_ascii=False, indent=2))
@@ -154,7 +154,7 @@ def save_sample_positions(config: str = typer.Option("config/default_strategy.ya
 def init_account(config: str = typer.Option("config/default_strategy.yaml"), output: str = typer.Option("text", help="输出格式：text/json")):
     cfg = load_config(config)
     service = TradingService(cfg)
-    sample = [{"stock_code": "000001", "stock_name": "示例股票", "buy_date": "2026-03-18", "buy_price": 12.34, "shares": 1000}]
+    sample = [{"stock_code": "000001", "stock_name": "示例股票", "buy_date": "2026-03-18", "buy_price": 12.34, "shares": 1000, "available_shares": 1000, "latest_price": 12.5}]
     service.save_positions(sample)
     if output == "json":
         print(json.dumps(success_response(sample, message="account initialized"), ensure_ascii=False, indent=2))
@@ -170,7 +170,7 @@ def init_workspace(
 ):
     cfg = load_config(config)
     service = TradingService(cfg)
-    sample = [{"stock_code": "000001", "stock_name": "示例股票", "buy_date": "2026-03-18", "buy_price": 12.34, "shares": 1000}]
+    sample = [{"stock_code": "000001", "stock_name": "示例股票", "buy_date": "2026-03-18", "buy_price": 12.34, "shares": 1000, "available_shares": 1000, "latest_price": 12.5}]
     service.save_positions(sample)
     from pathlib import Path
     out = Path(output_dir)
@@ -232,9 +232,15 @@ def show_version(output: str = typer.Option("text", help="输出格式：text/js
 @app.command()
 def ui():
     if is_frozen():
-        runner = packaged_data_dir() / "run_streamlit_app.py"
-        subprocess.run([str(runner)], check=False)
-        return
+        runner_exe = packaged_data_dir() / "run_streamlit_app.exe"
+        runner_py = packaged_data_dir() / "run_streamlit_app.py"
+        if runner_exe.exists():
+            subprocess.run([str(runner_exe)], check=False)
+            return
+        if runner_py.exists():
+            subprocess.run([sys.executable, str(runner_py)], check=False)
+            return
+        raise typer.BadParameter(f"未找到 UI 启动器: {runner_exe}")
     subprocess.run([sys.executable, "-m", "streamlit", "run", "src/ashare_strategy/ui/app.py"], check=False)
 
 

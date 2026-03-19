@@ -8,8 +8,8 @@ runner = CliRunner()
 
 def test_positions_json_output(monkeypatch):
     class DummyService:
-        def load_positions(self):
-            return [{'stock_code': '000001'}]
+        def load_account(self):
+            return {'cash': 10000, 'positions': [{'stock_code': '000001'}]}
 
     monkeypatch.setattr('ashare_strategy.cli.TradingService', lambda cfg: DummyService())
     result = runner.invoke(app, ['positions', '--output', 'json'])

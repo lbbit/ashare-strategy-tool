@@ -44,11 +44,14 @@ class StrategySelector:
     def _find_stock_signal(self, code: str, name: str, board_name: str) -> CandidateSignal | None:
         if self.config.exclude_st and self._is_st(name):
             return None
-        spot_match = self.spot[self.spot["代码"] == code]
+        spot_match = self.spot[self.spot["代码"] == code] if not self.spot.empty and "代码" in self.spot.columns else pd.DataFrame()
         if spot_match.empty:
-            return None
-        float_shares = pd.to_numeric(spot_match.iloc[0].get("流通股", None), errors="coerce")
-        if pd.isna(float_shares) or float_shares >= self.config.stock_float_cap_max:
+            float_shares = 0.0
+        else:
+            float_shares = pd.to_numeric(spot_match.iloc[0].get("流通股", None), errors="coerce")
+            if pd.isna(float_shares):
+                float_shares = 0.0
+        if float_shares and float_shares >= self.config.stock_float_cap_max:
             return None
         try:
             daily = self.provider.get_stock_daily(code)

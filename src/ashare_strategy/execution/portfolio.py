@@ -24,5 +24,8 @@ class TradingService:
     def load_positions(self):
         return self.portfolio_service.load_positions()
 
+    def load_account(self):
+        return self.portfolio_service.load_account()
+
     def save_positions(self, positions: list[dict]):
         self.portfolio_service.save_positions(positions)

@@ -71,7 +71,7 @@ class TushareProvider:
         return self._normalize_dates(df)
 
     def get_spot(self) -> pd.DataFrame:
-        raise NotImplementedError('TushareProvider 暂未实现实时行情接口')
+        return pd.DataFrame(columns=['代码', '名称', '流通股'])
 
     def get_benchmark_daily(self, symbol: str = 'sh000300') -> pd.DataFrame:
         index_code = '000300.SH' if symbol == 'sh000300' else symbol
