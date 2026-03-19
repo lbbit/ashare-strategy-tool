@@ -1,10 +1,61 @@
-# 详细使用说明
+# 新手详细使用说明
 
-## 1. 项目简介
-本工具用于实现 A 股板块筛选、个股筛选、回测分析、持仓持久化、CLI 与 Web UI 操作。
+> 这份文档默认你是一个只会手动炒股、没有写过程序、也没接触过量化工具的新手。  
+> 目标不是让你学会编程，而是让你一步一步把工具跑起来，先用起来，再慢慢理解里面的规则。
 
-## 2. 安装方式
-### 2.1 源码安装
+## 1. 先说清楚：这个工具到底是干什么的？
+你可以把它理解成一个“炒股辅助小助手”，主要帮你做 4 件事：
+
+1. **每天找出值得关注的股票**
+2. **检查你现在的持仓要不要重点盯一下**
+3. **回头验证这套方法过去是否有效**
+4. **把结果导出成表格，方便自己复盘**
+
+它**不会替你自动下单**，也**不会保证赚钱**。  
+它的作用是：
+- 帮你减少手工翻股票的时间
+- 帮你把“凭感觉操作”变成“按规则检查”
+- 帮你建立自己的复盘习惯
+
+## 2. 如果你完全不懂这些名词，先这样理解
+- **选股**：从很多股票里挑出符合条件的股票
+- **回测**：拿过去的历史数据，看看这套方法以前表现怎样
+- **持仓**：你现在手里持有的股票
+- **调仓**：把原来的股票卖掉一部分，再买新的
+- **均线**：过去一段时间平均价格的线，用来判断强弱
+- **回撤**：账户从高点往下掉了多少，掉得越多，风险通常越大
+- **胜率**：赚钱的交易次数占总交易次数的比例
+
+你不需要一开始全懂，只要先会操作，后面再逐步理解就行。
+
+## 3. 最推荐的新手使用方式
+如果你只想最快上手，请按下面顺序做：
+
+### 路线 A：只想先用最核心功能
+1. 安装工具
+2. 运行 `screen` 看今天候选股
+3. 运行 `plan` 生成每日计划
+4. 运行 `backtest` 看历史效果
+
+### 路线 B：你手里已经有持仓
+1. 安装工具
+2. 先运行 `save-sample-positions` 生成一个示例持仓文件
+3. 把里面的股票改成你自己的持仓
+4. 运行 `positions` 检查是否读取成功
+5. 运行 `plan` 生成每日计划
+
+## 4. 安装步骤（一步一步来）
+
+### 4.1 你需要准备什么？
+至少准备：
+- 一台电脑
+- 已安装 Python 3.11 或更高版本
+- 能访问 GitHub
+- 基本的命令行操作能力（复制粘贴命令即可）
+
+### 4.2 安装命令
+在终端中依次运行：
+
 ```bash
 git clone git@github.com:lbbit/ashare-strategy-tool.git
 cd ashare-strategy-tool
@@ -13,102 +64,212 @@ source .venv/bin/activate
 pip install -e .[dev]
 ```
 
-### 2.2 Windows 打包版本
-在 GitHub Releases 中下载 `ashare-strategy-tool-windows-x86_64.zip`，解压后运行可执行文件。
+如果你是 Windows 用户，命令略有不同，虚拟环境激活一般类似：
 
-## 3. 配置说明
-默认配置文件：`config/default_strategy.yaml`
+```powershell
+.venv\Scripts\activate
+```
 
-主要参数：
-- `board_ma_window`：板块均线窗口
-- `board_min_volume`：板块成交量阈值
-- `stock_float_cap_max`：流通股上限
-- `first_day_gain_pct`：首日阳线涨幅阈值
-- `buy_ma_window` / `sell_ma_window`：买卖均线参数
-- `hold_days`：最大持有天数
-- `rebalance_interval`：调仓周期
-- `commission_rate` / `stamp_duty_rate` / `slippage_rate`：交易成本
-- `position_store_path`：持仓文件路径
-- `use_cache`：是否启用缓存
+### 4.3 如果你不想折腾源码
+可以优先去这里下载发布版：
+- https://github.com/lbbit/ashare-strategy-tool/releases
 
-## 4. CLI 使用
-### 4.1 选股
+> 注意：如果 Release 页面没有 zip 附件，通常是自动打包工作流失败了，需要补发或手动上传。
+
+## 5. 先完成一次最简单的使用
+
+### 第一步：查看今日候选股
+运行：
 ```bash
 ashare-strategy screen
 ```
 
-### 4.2 回测
+你会看到一批符合策略规则的股票。  
+这一步的意义是：
+- 确认工具已经装好
+- 确认数据接口可用
+- 看看策略今天挑出了哪些股票
+
+### 第二步：生成每日交易计划
+运行：
 ```bash
-ashare-strategy backtest --mode rolling
-ashare-strategy backtest --mode rolling --export-csv trades.csv
+ashare-strategy plan --output-dir daily_plan
 ```
 
-### 4.3 持仓管理
+这个命令会帮你生成一个文件夹，例如 `daily_plan/`，里面通常有：
+- `summary.csv`：今天总体情况
+- `buy_candidates.csv`：今天值得重点关注的候选股票
+- `hold_positions.csv`：当前持仓列表
+- `sell_review.csv`：建议你重点复核的持仓
+
+如果你现在没有持仓，也没关系，先体验流程即可。
+
+### 第三步：回测历史效果
+运行：
 ```bash
-ashare-strategy positions
+ashare-strategy backtest --mode rolling --export-report-dir reports
+```
+
+这一步的意义是：
+- 看看策略过去历史表现
+- 不是看某一笔赚没赚，而是整体规则长期是否靠谱
+- 会导出交易记录和净值曲线，方便你自己复盘
+
+## 6. 如果你已经有持仓，怎么录进去？
+
+### 6.1 先生成一个示例文件
+运行：
+```bash
 ashare-strategy save-sample-positions
 ```
 
-### 4.4 启动 Web UI
+这会生成一个示例持仓文件。你可以把它当模板。
+
+### 6.2 再查看当前持仓
+运行：
+```bash
+ashare-strategy positions
+```
+
+### 6.3 你应该怎么理解这个功能？
+它不是自动读券商账户，而是让你先把自己的持仓记录在一个本地文件里。  
+这样工具就知道：
+- 你现在拿着哪些股票
+- 今天有哪些股票需要重点复核
+- 哪些候选股已经持有，不需要重复关注
+
+## 7. 最重要：新手参数怎么设置？
+默认配置文件在：
+- `config/default_strategy.yaml`
+
+如果你是新手，**建议先不要改参数**，先用默认值跑通一次。  
+等你看懂结果后，再开始微调。
+
+下面是常见参数的“通俗解释”：
+
+### 7.1 `hold_days`
+意思：最多持有几天。  
+建议新手：**先用默认值**。  
+影响：
+- 值越小，换股越快
+- 值越大，持股时间越长
+
+### 7.2 `rebalance_interval`
+意思：隔几天检查一次是否换仓。  
+建议新手：**先用默认值**。  
+影响：
+- 数字小：更频繁调整
+- 数字大：更少交易
+
+### 7.3 `commission_rate`
+意思：佣金。就是交易手续费。  
+建议新手：**不要设为 0**，否则回测会太理想化。  
+通常用默认值即可。
+
+### 7.4 `stamp_duty_rate`
+意思：印花税。通常卖出时产生。  
+建议：保持默认。
+
+### 7.5 `slippage_rate`
+意思：滑点。  
+通俗理解：你看到的价格，不一定就是你实际成交的价格。  
+建议新手：保持默认，不要先关掉。
+
+### 7.6 `use_cache`
+意思：是否使用本地缓存。  
+建议：**开着**。  
+原因：
+- 更快
+- 减少重复联网请求
+- 网络不稳定时更有帮助
+
+## 8. 每个命令是干什么的？
+
+### 8.1 `ashare-strategy screen`
+用途：看今天有哪些股票符合规则。  
+适合：每天开盘前或复盘时使用。
+
+### 8.2 `ashare-strategy plan --output-dir daily_plan`
+用途：生成你的日常执行计划。  
+适合：每天收盘后复盘，或者第二天盘前准备。
+
+### 8.3 `ashare-strategy positions`
+用途：查看当前本地记录的持仓。
+
+### 8.4 `ashare-strategy save-sample-positions`
+用途：生成一个示例持仓文件，方便你照着修改。
+
+### 8.5 `ashare-strategy backtest --mode rolling --export-report-dir reports`
+用途：回看历史上这套方法表现怎么样。
+
+### 8.6 `ashare-strategy ui`
+用途：打开图形界面。  
+适合：不想总看命令行的人。
+
+## 9. 建议你每天怎么用
+最简单的日常流程：
+
+1. 运行 `positions` 看当前持仓是否正确
+2. 运行 `screen` 看今天候选股
+3. 运行 `plan` 生成每日计划
+4. 打开 `buy_candidates.csv` 和 `sell_review.csv`
+5. 结合你自己的交易经验做最终决定
+
+## 10. 回测结果怎么看才不容易误解？
+新手最容易犯的错误是：
+- 看一次回测赚了很多，就觉得策略一定好
+- 只看收益，不看回撤
+- 忽略手续费和滑点
+
+建议你重点看：
+- **年化收益**：长期平均下来赚得怎么样
+- **最大回撤**：最糟糕的时候会亏到什么程度
+- **胜率**：赚钱次数多不多
+- **盈亏比**：赚的时候赚得是否比亏的时候更多
+
+不要只盯一个指标。
+
+## 11. 常见问题
+
+### 11.1 为什么我运行失败？
+常见原因：
+- 网络不稳定
+- AkShare 上游数据接口异常
+- 本地 Python 环境没有装好
+
+### 11.2 为什么没有结果？
+可能是：
+- 当天没有股票符合当前规则
+- 持仓文件为空
+- 数据接口没有返回有效数据
+
+### 11.3 为什么 Release 没有 Windows 压缩包？
+如果自动发布流程失败，Release 页面可能只有源码，没有 zip 附件。  
+这种情况需要检查 GitHub Actions 的 release 工作流并重新上传附件。
+
+## 12. 图形界面怎么用？
+运行：
 ```bash
 ashare-strategy ui
 ```
 
-## 5. Web UI 功能
-- 策略参数调整
-- 一键选股
-- 一键回测
-- 指标卡片展示
-- 净值曲线展示
-- 候选股与交易记录展示
+打开后你可以：
+- 调整参数
+- 点击运行选股
+- 点击运行回测
+- 看净值曲线
+- 看指标卡片
 
-## 6. 回测指标说明
-- 策略收益
-- 基准收益
-- 超额收益
-- 最大回撤
-- 年化收益
-- 波动率
-- 夏普比率
-- 胜率
-- 盈亏比
+如果你对命令行不熟，建议把 UI 当作主要入口。
 
-## 7. 持仓文件
-默认位置：`data/positions.json`
-可用于保存外部调仓结果或模拟盘持仓。
+## 13. 你现在最该做什么？
+如果你今天第一次接触这个工具，请只做这 4 件事：
 
-## 8. 发布与下载
-- Release 页面提供源码包和 Windows x86_64 打包包
-- 每次 tag 发布都会自动触发 GitHub Actions 构建与上传
-
-## 9. 报告导出
 ```bash
-ashare-strategy backtest --mode rolling --export-report-dir reports
-```
-导出内容包括：
-- candidates.csv
-- trades.csv
-- equity_curve.csv
-- metrics.csv
-
-## 10. Windows 打包说明
-项目在 GitHub tag 发布后，会自动通过 GitHub Actions 构建 Windows x86_64 包并上传到 Release。
-
-## 11. 注意事项
-- 实时数据依赖 AkShare 与上游数据接口，若网络异常或接口限流，CLI/回测可能失败。
-- 建议开启缓存，并在网络稳定时先预热数据。
-
-## 12. 每日交易计划
-```bash
+ashare-strategy screen
+ashare-strategy save-sample-positions
+ashare-strategy positions
 ashare-strategy plan --output-dir daily_plan
 ```
-导出内容包括：
-- summary.csv
-- buy_candidates.csv
-- hold_positions.csv
-- sell_review.csv
 
-用途：
-- 查看今日可新增关注标的
-- 核对当前持仓
-- 生成待复核卖出列表
+先把流程跑通，再考虑改参数、做回测、研究细节。
