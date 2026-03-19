@@ -162,3 +162,30 @@ Add graceful error handling and offline-friendly fallback messaging for live dat
 - Related Files: src/ashare_strategy/data/provider.py, src/ashare_strategy/cli.py
 
 ---
+## [ERR-20260319-007] windows_bundle_missing_config
+
+**Logged**: 2026-03-19T01:20:00Z
+**Priority**: high
+**Status**: pending
+**Area**: infra
+
+### Summary
+Windows PyInstaller bundle failed on first run because default config file was not included in the packaged app.
+
+### Error
+```
+FileNotFoundError: [Errno 2] No such file or directory: 'config\\default_strategy.yaml'
+```
+
+### Context
+- User ran: .\\ashare-strategy.exe screen
+- Packaged exe expected relative config path on disk.
+
+### Suggested Fix
+Bundle default config into the executable and resolve config path from PyInstaller runtime directory when running as frozen app.
+
+### Metadata
+- Reproducible: yes
+- Related Files: src/ashare_strategy/core/config.py, build_windows.py, README.md, docs/USER_GUIDE.md
+
+---

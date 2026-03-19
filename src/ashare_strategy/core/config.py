@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -36,8 +37,31 @@ class StrategyConfig(BaseModel):
     position_store_path: str = "data/positions.json"
 
 
+def resolve_config_path(path: str | Path | None = None) -> Path | None:
+    if not path:
+        return None
+    candidate = Path(path)
+    if candidate.exists():
+        return candidate
+    if getattr(sys, "frozen", False):
+        bundle_dir = Path(getattr(sys, "_MEIPASS", Path(sys.executable).resolve().parent))
+        bundled_candidate = bundle_dir / Path(path)
+        if bundled_candidate.exists():
+            return bundled_candidate
+        exe_relative_candidate = Path(sys.executable).resolve().parent / Path(path)
+        if exe_relative_candidate.exists():
+            return exe_relative_candidate
+    project_relative = Path(__file__).resolve().parents[3] / Path(path)
+    if project_relative.exists():
+        return project_relative
+    return candidate
+
+
 def load_config(path: str | Path | None = None) -> StrategyConfig:
     if not path:
         return StrategyConfig()
-    data = yaml.safe_load(Path(path).read_text(encoding="utf-8")) or {}
+    resolved = resolve_config_path(path)
+    if resolved is None:
+        return StrategyConfig()
+    data = yaml.safe_load(resolved.read_text(encoding="utf-8")) or {}
     return StrategyConfig(**data)

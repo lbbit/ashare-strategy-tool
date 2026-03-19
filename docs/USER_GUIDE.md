@@ -74,14 +74,19 @@ pip install -e .[dev]
 可以优先去这里下载发布版：
 - 📦 https://github.com/lbbit/ashare-strategy-tool/releases
 
-> ⚠️ 注意：如果 Release 页面没有 zip 附件，通常是自动打包工作流失败了，需要补发或手动上传。
+> ⚠️ 注意：Windows 打包版现在会内置默认配置文件，正常情况下解压后可直接运行。
+> 如果 Release 页面没有 zip 附件，通常是自动打包工作流失败了，需要补发或手动上传。
 
 ## 5️⃣ 先完成一次最简单的使用
 
 ### 第一步：查看今日候选股
-运行：
+如果你是源码安装用户，运行：
 ```bash
 ashare-strategy screen
+```
+如果你是 Windows 压缩包用户，进入解压目录后运行：
+```powershell
+.\ashare-strategy.exe screen
 ```
 
 意义：

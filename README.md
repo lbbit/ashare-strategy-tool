@@ -56,8 +56,13 @@ pip install -e .[dev]
 - 📦 [下载发布版本](https://github.com/lbbit/ashare-strategy-tool/releases)
 
 ### 2️⃣ 第 2 步：先看今天候选股
+如果你使用的是源码安装版：
 ```bash
 ashare-strategy screen
+```
+如果你使用的是 Windows 打包版：
+```powershell
+.\ashare-strategy.exe screen
 ```
 
 ### 3️⃣ 第 3 步：生成每日计划
@@ -121,7 +126,8 @@ ashare-strategy ui
 - [📝 Release 说明](RELEASE_NOTES.md)
 
 ## 📦 下载与发布
-- GitHub Release 页面提供源码包
+- GitHub Release 页面提供源码包和 Windows 打包版
+- Windows 打包版已内置默认配置文件，解压后可直接运行 `ashare-strategy.exe screen`
 - Tag 发布后会自动触发 Windows x86_64 打包上传
 - 如果自动上传失败，可手动补传 zip 附件
 
