@@ -138,3 +138,13 @@
 1. Tushare Pro 的可用性不仅取决于 token 是否有效，还取决于具体接口权限
 2. 后续适配时需要在文档中明确区分“已配置 token”和“具备目标接口权限”是两件事
 3. 实现上应对权限不足给出清晰提示，而不是简单当作网络错误处理
+
+
+## 8. Tinyshare 兼容方案
+对于无法直接使用官方 Tushare 或希望通过代理兼容服务获取数据的用户，可使用 Tinyshare。
+特点：
+- Python 调用风格与 Tushare Pro 接近
+- 只需要把 SDK 从 `tushare` 切换到 `tinyshare`
+- 适合作为 `TushareProvider` 的兼容后端，而不是单独再造一套业务接口
+
+当前项目已支持通过 `data_source.tushare_sdk` 在 `tushare` / `tinyshare` 间切换。

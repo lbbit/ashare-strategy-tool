@@ -159,3 +159,8 @@ ashare-strategy ui
 ashare-strategy screen --template conservative
 ashare-strategy backtest --template aggressive --output json
 ```
+
+
+## 数据源补充说明
+- 默认免费体验可使用 `akshare`
+- 若你购买的是 Tinyshare 授权码，可继续选择 `provider: tushare`，并把 `data_source.tushare_sdk` 设为 `tinyshare`，把授权码填写到 `data_source.tushare_token`

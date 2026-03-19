@@ -42,3 +42,25 @@ Implement provider config fields for auth, add Tushare provider with minimal end
 - Tags: provider, reliability, tushare
 
 ---
+## [LRN-20260319-009] correction
+
+**Logged**: 2026-03-19T02:32:00Z
+**Priority**: high
+**Status**: pending
+**Area**: backend
+
+### Summary
+Previously treating the second credential as invalid for Tushare was incorrect because it is a Tinyshare authorization code, not a native Tushare token.
+
+### Details
+User clarified the purchased credential is for Tinyshare SDK compatibility, which requires `import tinyshare as ts` while preserving Tushare-style `pro_api()` calls. After switching SDK, low-volume smoke tests succeeded for `index_daily`, `daily`, and `trade_cal`.
+
+### Suggested Action
+Add Tinyshare-compatible provider option or allow Tushare provider to select SDK backend via config, and document credential type differences clearly.
+
+### Metadata
+- Source: user_feedback
+- Related Files: src/ashare_strategy/data/providers/tushare.py, docs/USER_GUIDE.md, docs/DATA_PROVIDER_RESEARCH.md
+- Tags: tinyshare, tushare, correction
+
+---

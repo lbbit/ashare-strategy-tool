@@ -13,5 +13,5 @@ def build_data_provider(config: StrategyConfig) -> MarketDataProvider:
     if provider_name == 'tushare':
         if not config.data_source.tushare_token:
             raise ValueError('使用 tushare 数据源时必须配置 data_source.tushare_token')
-        return TushareProvider(token=config.data_source.tushare_token, cache_dir=config.data_cache_dir, use_cache=config.use_cache)
+        return TushareProvider(token=config.data_source.tushare_token, cache_dir=config.data_cache_dir, use_cache=config.use_cache, sdk=config.data_source.tushare_sdk)
     raise ValueError(f'不支持的数据源: {provider_name}')

@@ -9,14 +9,18 @@ from ashare_strategy.data.cache import CsvCache
 
 
 class TushareProvider:
-    def __init__(self, token: str, cache_dir: str = '.cache/market_data', use_cache: bool = True) -> None:
+    def __init__(self, token: str, cache_dir: str = '.cache/market_data', use_cache: bool = True, sdk: str = 'tushare') -> None:
         self.token = token
         self.cache = CsvCache(cache_dir, enabled=use_cache)
         self._pro = None
+        self.sdk = sdk
 
     def _client(self):
         if self._pro is None:
-            import tushare as ts
+            if self.sdk == 'tinyshare':
+                import tinyshare as ts
+            else:
+                import tushare as ts
             ts.set_token(self.token)
             self._pro = ts.pro_api()
         return self._pro

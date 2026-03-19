@@ -5,6 +5,7 @@ data_source:
   timeout_seconds: 20
   max_retries: 2
   tushare_token: ""
+  tushare_sdk: tushare
 
 account:
   provider: json

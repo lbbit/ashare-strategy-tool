@@ -141,3 +141,11 @@
 
 - 如果返回“token 不对，请确认”，通常表示 token 无效、输入错误或已失效。
 - 如果返回“没有接口访问权限”，通常表示 token 有效，但目标接口权限不足。
+
+### Tinyshare 授权码怎么配？
+如果你买的是 Tinyshare 的代理/兼容服务：
+- `data_source.provider: tushare`
+- `data_source.tushare_sdk: tinyshare`
+- `data_source.tushare_token: 你的授权码`
+
+这样程序内部会用 `tinyshare` SDK，但仍走 Tushare 风格接口。
