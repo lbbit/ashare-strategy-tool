@@ -28,6 +28,7 @@
 | 工程 | 测试样例 | 配置与核心规则基础测试 | ✅ |
 | 工程 | Windows 打包 | 支持 GitHub Actions 自动构建 Windows x86_64 包 | ✅ |
 | 工程 | Release 自动化 | Tag 触发自动发布并上传附件 | ✅ |
+| 工程 | Release 资产上传校验 | 工作流输出构建产物列表并修复 Windows runner 下的附件匹配路径 | ✅ |
 | 文档 | 详细使用说明 | 新增 docs/USER_GUIDE.md | ✅ |
 | 工程 | AGENTS 文档 | 新增 AGENTS.md 便于 AI 持续开发 | ✅ |
 | 架构 | 架构梳理文档 | 新增长期扩展架构审视与演进建议 | ✅ |

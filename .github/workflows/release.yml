@@ -28,11 +28,17 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install -e .[dev]
-      - run: python build_windows.py
+      - name: Build Windows package
+        run: python build_windows.py
+      - name: Show generated artifacts
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path . -Filter "ashare-strategy-windows-x86_64-*.zip"
+          Get-ChildItem -Path dist_release -Recurse
       - uses: softprops/action-gh-release@v2
         with:
           files: |
-            ashare-strategy-windows-x86_64-*.zip
+            .\ashare-strategy-windows-x86_64-*.zip
           body_path: RELEASE_NOTES.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
