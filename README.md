@@ -164,3 +164,5 @@ ashare-strategy backtest --template aggressive --output json
 ## 数据源补充说明
 - 默认免费体验可使用 `akshare`
 - 若你购买的是 Tinyshare 授权码，可继续选择 `provider: tushare`，并把 `data_source.tushare_sdk` 设为 `tinyshare`，把授权码填写到 `data_source.tushare_token`
+
+- 新增 `doctor-data` 命令，可快速检查当前数据源是否可认证、核心接口是否可访问、是否只能回退缓存。

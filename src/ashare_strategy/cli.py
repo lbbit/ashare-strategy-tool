@@ -11,6 +11,7 @@ from rich.table import Table
 
 from ashare_strategy.core.config import load_config
 from ashare_strategy.execution.portfolio import TradingService
+from ashare_strategy.data.providers.router import build_data_provider
 from ashare_strategy.reporting import export_report
 from ashare_strategy.planner import TradingPlanner
 from ashare_strategy.utils import success_response, error_response
@@ -147,6 +148,34 @@ def init_workspace(
         print(json.dumps(success_response(payload, message="workspace initialized"), ensure_ascii=False, indent=2))
     else:
         print(f"[green]已完成初始化：持仓模板已写入，工作目录已创建 -> {out}[/green]")
+
+
+@app.command("doctor-data")
+def doctor_data(config: str = typer.Option("config/default_strategy.yaml", help="配置文件路径"), output: str = typer.Option("text", help="输出格式：text/json")):
+    cfg = load_config(config)
+    provider = build_data_provider(cfg)
+    if not hasattr(provider, 'health_check'):
+        payload = error_response('当前数据源暂不支持健康检查')
+        if output == 'json':
+            print(json.dumps(payload, ensure_ascii=False, indent=2))
+        else:
+            print('[yellow]当前数据源暂不支持健康检查[/yellow]')
+        raise typer.Exit(code=1)
+    result = provider.health_check().to_dict()
+    wrapped = success_response(result, message='data provider health checked')
+    if output == 'json':
+        print(json.dumps(wrapped, ensure_ascii=False, indent=2, default=str))
+        return
+    print(f"[bold]数据源:[/bold] {result['provider']}  SDK: {result.get('sdk') or '-'}")
+    print(f"[bold]状态:[/bold] {result['status']}  | 缓存启用: {result['cache_enabled']}")
+    print(f"[bold]说明:[/bold] {result['message']}")
+    table = Table(title='数据源健康检查')
+    table.add_column('检查项')
+    table.add_column('状态')
+    table.add_column('说明')
+    for item in result.get('checks', []):
+        table.add_row(str(item.get('name')), str(item.get('status')), str(item.get('message', item.get('rows', ''))))
+    print(table)
 
 
 @app.command()

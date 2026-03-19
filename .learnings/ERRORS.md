@@ -243,3 +243,30 @@ Document distinction between invalid token and valid token without endpoint perm
 - Related Files: src/ashare_strategy/data/providers/tushare.py, docs/USER_GUIDE.md, docs/DATA_PROVIDER_RESEARCH.md
 
 ---
+## [ERR-20260319-011] doctor_data_cache_api_mismatch
+
+**Logged**: 2026-03-19T02:42:00Z
+**Priority**: medium
+**Status**: pending
+**Area**: backend
+
+### Summary
+New `doctor-data` command failed because health check assumed `CsvCache.get_path()` existed, but cache implementation only exposed `load_or_fetch()`.
+
+### Error
+```
+AttributeError: 'CsvCache' object has no attribute 'get_path'
+```
+
+### Context
+- Command: `PYTHONPATH=src python3 -m ashare_strategy.cli doctor-data --config config/default_strategy.yaml --output json`
+- Failure occurred in AkShare provider health check.
+
+### Suggested Fix
+Add a small `get_path()` helper to `CsvCache` and re-run CLI smoke tests after adding new provider diagnostics.
+
+### Metadata
+- Reproducible: yes
+- Related Files: src/ashare_strategy/data/cache.py, src/ashare_strategy/data/provider.py, src/ashare_strategy/cli.py
+
+---

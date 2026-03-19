@@ -8,6 +8,7 @@ import time
 import pandas as pd
 
 from ashare_strategy.data.cache import CsvCache
+from ashare_strategy.data.health import ProviderHealthCheck
 
 
 class AkshareProvider:
@@ -47,6 +48,26 @@ class AkshareProvider:
                 if attempt < self.max_retries:
                     time.sleep(1 + attempt)
         raise last_error
+
+
+    def health_check(self) -> ProviderHealthCheck:
+        cache_path = self.cache.get_path('stock_spot')
+        checks = []
+        try:
+            df = self.get_spot().head(3)
+            checks.append({"name": "stock_spot", "status": "ok", "rows": len(df)})
+            status = 'ok'
+            message = '免费数据源可访问'
+        except Exception as e:
+            if cache_path.exists():
+                checks.append({"name": "stock_spot", "status": "cache_fallback", "message": str(e), "cache_path": str(cache_path)})
+                status = 'degraded'
+                message = '实时接口失败，但本地缓存可用'
+            else:
+                checks.append({"name": "stock_spot", "status": "error", "message": str(e)})
+                status = 'error'
+                message = '实时接口和缓存都不可用'
+        return ProviderHealthCheck(provider='akshare', status=status, auth_ok=(status in {'ok', 'degraded'}), cache_enabled=self.cache.enabled, checks=checks, message=message)
 
     def get_stock_daily(self, symbol: str, start_date: Optional[str] = None, end_date: Optional[str] = None) -> pd.DataFrame:
         def fetch():

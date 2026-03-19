@@ -149,3 +149,17 @@
 - `data_source.tushare_token: 你的授权码`
 
 这样程序内部会用 `tinyshare` SDK，但仍走 Tushare 风格接口。
+
+## 2️⃣2️⃣ 数据源诊断命令
+可运行：
+```bash
+ashare-strategy doctor-data --output json
+```
+它会检查：
+- 当前数据源类型
+- SDK 类型（如 tinyshare）
+- token/授权码是否可用
+- 核心接口是否可访问
+- 是否只能依赖缓存降级
+
+如果你在排查“为什么今天拉不到数据”，建议先跑这个命令。

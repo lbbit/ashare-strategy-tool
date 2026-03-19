@@ -12,8 +12,11 @@ class CsvCache:
         self.enabled = enabled
         self.base_dir.mkdir(parents=True, exist_ok=True)
 
+    def get_path(self, key: str) -> Path:
+        return self.base_dir / f"{key}.csv"
+
     def load_or_fetch(self, key: str, fetcher: Callable[[], pd.DataFrame]) -> pd.DataFrame:
-        path = self.base_dir / f"{key}.csv"
+        path = self.get_path(key)
         if self.enabled and path.exists():
             return pd.read_csv(path)
         df = fetcher()
