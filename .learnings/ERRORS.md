@@ -270,6 +270,42 @@ Add a small `get_path()` helper to `CsvCache` and re-run CLI smoke tests after a
 - Related Files: src/ashare_strategy/data/cache.py, src/ashare_strategy/data/provider.py, src/ashare_strategy/cli.py
 
 ---
+## [ERR-20260319-013] release_asset_glob_mismatch_windows
+
+**Logged**: 2026-03-19T07:20:00Z
+**Priority**: high
+**Status**: resolved
+**Area**: infra
+
+### Summary
+GitHub Release workflow reported success for tag builds, but Windows zip assets were not uploaded because the release action file glob did not match generated files on the Windows runner.
+
+### Error
+```
+🤔 Pattern 'ashare-strategy-windows-x86_64-*.zip' does not match any files.
+🤔 ashare-strategy-windows-x86_64-*.zip does not include a valid file.
+```
+
+### Context
+- Command used for diagnosis: `gh run view 23283954869 --repo lbbit/ashare-strategy-tool --log`
+- Build step succeeded and generated a versioned zip archive.
+- Upload step used `softprops/action-gh-release@v2` with a bare glob pattern.
+- `gh release view v0.16.3 --json assets,url` confirmed `assets: []`.
+
+### Suggested Fix
+Use an explicit relative path glob on Windows (for example `.\\ashare-strategy-windows-x86_64-*.zip`) and print generated artifact paths before upload so future failures are visible in logs.
+
+### Metadata
+- Reproducible: yes
+- Related Files: .github/workflows/release.yml, build_windows.py, AGENTS.md
+
+### Resolution
+- **Resolved**: 2026-03-19T07:23:00Z
+- **Commit/PR**: 8dac4e4
+- **Notes**: Updated release workflow to print generated artifacts and use a Windows-safe relative glob path for release asset upload.
+
+---
+
 ## [ERR-20260319-012] windows_bundle_init_workspace_and_ui
 
 **Logged**: 2026-03-19T03:02:00Z

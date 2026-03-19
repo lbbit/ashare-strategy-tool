@@ -1,16 +1,15 @@
 # Release Notes
 
 ## ✨ 本次更新亮点
-- 继续修复 Windows 打包版 UI 启动逻辑，改为使用独立的内置 Streamlit 启动器
-- `screen` 失败时也会输出更友好的数据源诊断提示，不再直接抛出一大段异常
-- 全面重写 `docs/USER_GUIDE.md`，补充：模板怎么选、配置怎么改、持仓文件怎么填、输出文件各代表什么
-- README、功能状态、开发计划、AGENTS 文档同步更新
+- 修复 GitHub Release 工作流在 Windows runner 上未匹配到版本化 zip 的问题
+- 新增上传前产物列表输出，方便直接从日志确认 Windows 安装包是否已生成
+- 补充 AGENTS 与功能状态文档，明确“workflow success 不等于 release assets 已存在”的发布校验约束
 
 ## 📦 产物
-- `ashare-strategy-windows-x86_64-v0.16.3.zip`
+- `ashare-strategy-windows-x86_64-v0.16.4.zip`
 - 源码包
 
 ## 🙌 使用建议
-- 如果你购买的是 Tinyshare 授权码，请务必使用 `provider: tushare` + `tushare_sdk: tinyshare` 的配置文件运行
-- 如果 `screen` 失败，请先执行 `doctor-data`，再确认是否仍在使用默认 `akshare` 配置
-- Windows 用户升级后，请重新验证 `ui`、`screen`、`init-workspace`、`version`
+- 发布完成后，除了看 Actions 成功，还应执行 `gh release view v0.16.4 --json assets,url` 确认附件真实存在
+- Windows 用户下载后，建议优先验证 `version`、`--help`、`doctor-data`、`init-workspace`、`ui`
+- 如果数据源异常，请先运行 `doctor-data`，必要时再尝试 `--offline`
