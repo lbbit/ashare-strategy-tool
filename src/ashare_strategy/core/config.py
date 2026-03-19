@@ -8,11 +8,25 @@ import yaml
 from pydantic import BaseModel, Field
 
 
-class StrategyConfig(BaseModel):
-    data_provider: str = "akshare"
-    account_provider: str = "json"
-    data_cache_dir: str = ".cache/market_data"
+class DataSourceConfig(BaseModel):
+    provider: str = "akshare"
+    cache_dir: str = ".cache/market_data"
     use_cache: bool = True
+
+
+class AccountConfig(BaseModel):
+    provider: str = "json"
+    position_store_path: str = "data/positions.json"
+
+
+class AppConfig(BaseModel):
+    default_output: str = "text"
+
+
+class StrategyConfig(BaseModel):
+    data_source: DataSourceConfig = Field(default_factory=DataSourceConfig)
+    account: AccountConfig = Field(default_factory=AccountConfig)
+    app: AppConfig = Field(default_factory=AppConfig)
     start_date: Optional[str] = None
     end_date: Optional[str] = None
     lookback_days: int = 365
@@ -36,7 +50,26 @@ class StrategyConfig(BaseModel):
     commission_rate: float = 0.0003
     stamp_duty_rate: float = 0.001
     slippage_rate: float = 0.0005
-    position_store_path: str = "data/positions.json"
+
+    @property
+    def data_provider(self) -> str:
+        return self.data_source.provider
+
+    @property
+    def data_cache_dir(self) -> str:
+        return self.data_source.cache_dir
+
+    @property
+    def use_cache(self) -> bool:
+        return self.data_source.use_cache
+
+    @property
+    def account_provider(self) -> str:
+        return self.account.provider
+
+    @property
+    def position_store_path(self) -> str:
+        return self.account.position_store_path
 
 
 def resolve_config_path(path: str | Path | None = None) -> Path | None:
@@ -66,4 +99,18 @@ def load_config(path: str | Path | None = None) -> StrategyConfig:
     if resolved is None:
         return StrategyConfig()
     data = yaml.safe_load(resolved.read_text(encoding="utf-8")) or {}
+    if 'data_provider' in data or 'data_cache_dir' in data or 'use_cache' in data:
+        data.setdefault('data_source', {})
+        if 'data_provider' in data:
+            data['data_source']['provider'] = data.pop('data_provider')
+        if 'data_cache_dir' in data:
+            data['data_source']['cache_dir'] = data.pop('data_cache_dir')
+        if 'use_cache' in data:
+            data['data_source']['use_cache'] = data.pop('use_cache')
+    if 'account_provider' in data or 'position_store_path' in data:
+        data.setdefault('account', {})
+        if 'account_provider' in data:
+            data['account']['provider'] = data.pop('account_provider')
+        if 'position_store_path' in data:
+            data['account']['position_store_path'] = data.pop('position_store_path')
     return StrategyConfig(**data)

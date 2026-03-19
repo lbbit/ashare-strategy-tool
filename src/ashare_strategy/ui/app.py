@@ -8,11 +8,13 @@ from ashare_strategy.core.config import StrategyConfig
 from ashare_strategy.execution.portfolio import TradingService
 from ashare_strategy.utils import result_to_dataframes
 
-st.set_page_config(page_title="A股策略工具", layout="wide")
-st.title("A股选股与回测工具")
+st.set_page_config(page_title="A股策略工具", layout="wide", page_icon="📈")
+st.title("📈 A股选股与回测工具")
+st.caption("面向普通股民和进阶用户的选股、回测、持仓与计划辅助工具")
 
 with st.sidebar:
-    st.header("参数")
+    st.header("⚙️ 参数设置")
+    st.caption("建议新手先使用默认值，跑通后再逐步调整")
     board_min_volume = st.number_input("板块近5日最小成交量", value=120.0)
     stock_float_cap_max = st.number_input("流通A股上限", value=1_000_000_000.0)
     first_day_gain_pct = st.number_input("首日涨幅阈值(%)", value=7.0)
@@ -35,15 +37,16 @@ cfg = StrategyConfig(
 )
 service = TradingService(cfg)
 
+st.subheader("🚀 快速操作")
 col1, col2 = st.columns(2)
-if col1.button("执行选股"):
+if col1.button("🔎 执行选股"):
     df = service.screen()
-    st.subheader("候选股票")
+    st.subheader("🧾 候选股票")
     st.dataframe(df if not df.empty else pd.DataFrame(), use_container_width=True)
 
-if col2.button("执行回测"):
+if col2.button("📉 执行回测"):
     result = service.backtest(initial_capital=initial_capital, mode="rolling")
-    st.subheader("回测结果")
+    st.subheader("📊 回测结果")
     m1, m2, m3, m4 = st.columns(4)
     m1.metric("策略收益", f"{result.get('strategy_return', 0):.2%}")
     m2.metric("基准收益", f"{result.get('benchmark_return', 0):.2%}")
@@ -54,7 +57,7 @@ if col2.button("执行回测"):
     if not equity.empty:
         fig = px.line(equity, x="date", y="equity", title="策略净值曲线")
         st.plotly_chart(fig, use_container_width=True)
-    st.subheader("候选股票")
+    st.subheader("🧾 候选股票")
     st.dataframe(candidates, use_container_width=True)
-    st.subheader("交易记录")
+    st.subheader("📒 交易记录")
     st.dataframe(trades, use_container_width=True)

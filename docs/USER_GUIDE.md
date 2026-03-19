@@ -266,3 +266,16 @@ ashare-strategy plan --output json
 ashare-strategy positions --output json
 ```
 这适合给 AI Agent、脚本或自动化流程读取。
+
+## 1️⃣5️⃣ 结构化 JSON 输出说明
+当你使用 `--output json` 时，CLI 会尽量返回统一结构：
+
+```json
+{
+  "status": "success",
+  "message": "ok",
+  "data": ...
+}
+```
+
+这更适合 AI Agent、脚本和自动化流程解析。

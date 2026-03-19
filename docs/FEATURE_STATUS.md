@@ -37,3 +37,6 @@
 | 架构 | 账户抽象层 | 新增 Holding 模型与账户仓位仓储接口 | ✅ |
 | CLI | 计划 JSON 输出 | plan 命令支持 `--output json` | ✅ |
 | CLI | 持仓 JSON 输出 | positions 命令支持结构化输出 | ✅ |
+| 配置 | 配置分层 | 拆分 data_source / account / app 配置域并兼容旧配置 | ✅ |
+| CLI | 统一结构化输出 | JSON 输出统一为 status/message/data 结构 | ✅ |
+| UI | 界面信息架构优化 | 增加图标、说明文案和更清晰的操作分区 | ✅ |

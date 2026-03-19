@@ -13,6 +13,7 @@ from ashare_strategy.core.config import load_config
 from ashare_strategy.execution.portfolio import TradingService
 from ashare_strategy.reporting import export_report
 from ashare_strategy.planner import TradingPlanner
+from ashare_strategy.utils import success_response, error_response
 
 app = typer.Typer(help="A股策略选股/回测工具")
 
@@ -23,7 +24,7 @@ def screen(config: str = typer.Option("config/default_strategy.yaml", help="配�
     service = TradingService(cfg)
     df = service.screen()
     if output == "json":
-        print(json.dumps(df.to_dict(orient="records"), ensure_ascii=False, indent=2, default=str))
+        print(json.dumps(success_response(df.to_dict(orient="records")), ensure_ascii=False, indent=2, default=str))
         return
     if df.empty:
         print("[yellow]没有筛选到符合条件的股票[/yellow]")
@@ -37,16 +38,22 @@ def screen(config: str = typer.Option("config/default_strategy.yaml", help="配�
 
 
 @app.command()
-def backtest(config: str = typer.Option("config/default_strategy.yaml"), initial_capital: float = 1_000_000, mode: str = typer.Option("rolling", help="rolling/simple"), export_csv: str = typer.Option("", help="导出交易结果 CSV 路径"), export_report_dir: str = typer.Option("", help="导出完整报告目录")):
+def backtest(config: str = typer.Option("config/default_strategy.yaml"), initial_capital: float = 1_000_000, mode: str = typer.Option("rolling", help="rolling/simple"), export_csv: str = typer.Option("", help="导出交易结果 CSV 路径"), export_report_dir: str = typer.Option("", help="导出完整报告目录"), output: str = typer.Option("text", help="输出格式：text/json")):
     cfg = load_config(config)
     service = TradingService(cfg)
     try:
         result = service.backtest(initial_capital=initial_capital, mode=mode)
     except Exception as e:
-        print(f"[red]回测失败：{e}[/red]")
+        if output == "json":
+            print(json.dumps(error_response(str(e)), ensure_ascii=False, indent=2))
+        else:
+            print(f"[red]回测失败：{e}[/red]")
         raise typer.Exit(code=1)
     print_json = json.dumps(result, ensure_ascii=False, indent=2, default=str)
-    print(print_json)
+    if output == "json":
+        print(json.dumps(success_response(result), ensure_ascii=False, indent=2, default=str))
+    else:
+        print(print_json)
     if export_csv:
         import pandas as pd
         pd.DataFrame(result.get("trades", [])).to_csv(export_csv, index=False)
@@ -67,7 +74,7 @@ def plan(config: str = typer.Option("config/default_strategy.yaml"), output_dir:
         print(f"[red]生成交易计划失败：{e}[/red]")
         raise typer.Exit(code=1)
     if output == "json":
-        print(json.dumps(result['plan'], ensure_ascii=False, indent=2))
+        print(json.dumps(success_response(result['plan']), ensure_ascii=False, indent=2))
     else:
         print(json.dumps(result['plan'], ensure_ascii=False, indent=2))
         print(f"[green]交易计划已导出到 {result['output_dir']}[/green]")
@@ -78,7 +85,10 @@ def positions(config: str = typer.Option("config/default_strategy.yaml"), output
     cfg = load_config(config)
     service = TradingService(cfg)
     data = service.load_positions()
-    print(json.dumps(data, ensure_ascii=False, indent=2))
+    if output == "json":
+        print(json.dumps(success_response(data), ensure_ascii=False, indent=2))
+    else:
+        print(json.dumps(data, ensure_ascii=False, indent=2))
 
 
 @app.command()

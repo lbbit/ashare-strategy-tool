@@ -1,5 +1,15 @@
-start_date: null
-end_date: null
+data_source:
+  provider: akshare
+  cache_dir: .cache/market_data
+  use_cache: true
+
+account:
+  provider: json
+  position_store_path: data/positions.json
+
+app:
+  default_output: text
+
 lookback_days: 365
 rebalance_interval: 7
 max_positions: 3
@@ -18,3 +28,6 @@ hold_days: 5
 benchmark_symbol: sh000300
 exclude_st: true
 board_name_keywords: []
+commission_rate: 0.0003
+stamp_duty_rate: 0.001
+slippage_rate: 0.0005
