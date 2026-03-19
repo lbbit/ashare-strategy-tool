@@ -1,16 +1,16 @@
 # Release Notes
 
 ## ✨ 本次更新亮点
-- `TushareProvider` 新增 SDK 后端切换能力，支持 `tushare` 与 `tinyshare`
-- 已验证 Tinyshare 授权码可用，并以最小流量测试通过 `index_daily` / `daily` / `trade_cal`
-- 配置文件新增 `data_source.tushare_sdk`，支持持久化保存 SDK 选择
-- 文档补充 Tinyshare 与官方 Tushare token/权限差异说明
+- 新增 `doctor-data` 命令，可诊断当前数据源认证、接口可用性与缓存降级状态
+- UI 新增数据源状态展示与一键健康检查
+- AkShare / Tushare(Tinyshare) provider 增加健康检查输出结构，便于普通用户和 AI Agent 排查问题
+- 错误分类更清晰：区分认证失败、权限不足、缓存降级、网络错误
 
 ## 📦 产物
 - `ashare-strategy-windows-x86_64.zip`
 - 源码包
 
 ## 🙌 使用建议
-- 如果你购买的是 Tinyshare 授权码，请配置 `data_source.provider: tushare`
-- 同时设置 `data_source.tushare_sdk: tinyshare`
-- 将授权码填写到 `data_source.tushare_token`
+- 如果数据拉取失败，先执行 `ashare-strategy doctor-data --output json`
+- 若使用 Tinyshare，请确认 `data_source.tushare_sdk: tinyshare`
+- 若 AkShare 出现网络波动，诊断结果会提示是否已退回缓存或完全不可用
