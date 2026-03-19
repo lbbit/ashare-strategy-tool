@@ -8,3 +8,5 @@ dist/
 dist_release/
 build/
 *.spec
+daily_plan_test/
+daily_plan/

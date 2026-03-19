@@ -12,6 +12,7 @@ from rich.table import Table
 from ashare_strategy.core.config import load_config
 from ashare_strategy.execution.portfolio import TradingService
 from ashare_strategy.reporting import export_report
+from ashare_strategy.planner import TradingPlanner
 
 app = typer.Typer(help="A股策略选股/回测工具")
 
@@ -50,6 +51,20 @@ def backtest(config: str = typer.Option("config/default_strategy.yaml"), initial
     if export_report_dir:
         files = export_report(result, export_report_dir)
         print(f"[green]完整报告已导出: {files}[/green]")
+
+
+@app.command()
+def plan(config: str = typer.Option("config/default_strategy.yaml"), output_dir: str = typer.Option("daily_plan", help="导出交易计划目录")):
+    cfg = load_config(config)
+    service = TradingService(cfg)
+    planner = TradingPlanner(service, cfg)
+    try:
+        result = planner.export_daily_plan(output_dir)
+    except Exception as e:
+        print(f"[red]生成交易计划失败：{e}[/red]")
+        raise typer.Exit(code=1)
+    print(json.dumps(result['plan'], ensure_ascii=False, indent=2))
+    print(f"[green]交易计划已导出到 {result['output_dir']}[/green]")
 
 
 @app.command()

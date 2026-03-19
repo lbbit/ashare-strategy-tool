@@ -10,6 +10,7 @@ A 股策略选股、回测、信号执行、CLI、Web UI、Windows 打包与 Git
 - `src/ashare_strategy/backtest/`：简化回测、滚动回测、绩效分析
 - `src/ashare_strategy/execution/`：交易服务与持仓持久化
 - `src/ashare_strategy/ui/`：Streamlit 界面
+- `src/ashare_strategy/planner.py`：每日交易计划与导出
 - `tests/`：单元测试
 - `docs/`：开发计划、功能状态、详细使用说明
 - `.github/workflows/`：测试、构建、发布自动化

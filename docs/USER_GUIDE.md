@@ -97,3 +97,18 @@ ashare-strategy backtest --mode rolling --export-report-dir reports
 ## 11. 注意事项
 - 实时数据依赖 AkShare 与上游数据接口，若网络异常或接口限流，CLI/回测可能失败。
 - 建议开启缓存，并在网络稳定时先预热数据。
+
+## 12. 每日交易计划
+```bash
+ashare-strategy plan --output-dir daily_plan
+```
+导出内容包括：
+- summary.csv
+- buy_candidates.csv
+- hold_positions.csv
+- sell_review.csv
+
+用途：
+- 查看今日可新增关注标的
+- 核对当前持仓
+- 生成待复核卖出列表
