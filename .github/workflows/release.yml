@@ -29,21 +29,25 @@ jobs:
           python-version: '3.11'
       - run: pip install -e .[dev]
       - name: Build Windows package
-        run: python build_windows.py
+        shell: pwsh
+        run: |
+          python build_windows.py
+          $asset = Join-Path $PWD "ashare-strategy-windows-x86_64-${env:GITHUB_REF_NAME}.zip"
+          if (-not (Test-Path $asset)) {
+            Write-Error "Expected archive not found: $asset"
+            exit 1
+          }
+          "WINDOWS_ASSET=$asset" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Show generated artifacts
         shell: pwsh
         run: |
           Get-ChildItem -Path . -Filter "ashare-strategy-windows-x86_64-*.zip" | Format-Table FullName, Length -AutoSize
           Get-ChildItem -Path dist_release -Recurse | Format-Table FullName, Length -AutoSize
+          Write-Host "Resolved asset path: $env:WINDOWS_ASSET"
       - name: Upload release asset
         shell: pwsh
         run: |
-          $asset = Get-ChildItem -Path . -Filter "ashare-strategy-windows-x86_64-*.zip" | Select-Object -First 1
-          if (-not $asset) {
-            Write-Error "Windows release zip not found"
-            exit 1
-          }
-          gh release upload $env:GITHUB_REF_NAME $asset.FullName --repo $env:GITHUB_REPOSITORY --clobber
+          gh release upload $env:GITHUB_REF_NAME $env:WINDOWS_ASSET --repo $env:GITHUB_REPOSITORY --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: softprops/action-gh-release@v2
