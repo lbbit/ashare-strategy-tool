@@ -1,16 +1,16 @@
 # Release Notes
 
 ## ✨ 本次更新亮点
-- 新增 `version` 命令，可直接查看当前运行版本
-- Windows 打包 zip 文件名现已包含版本号，便于区分不同发布包
-- 发布流程调整为上传带版本号的 Windows 压缩包
-- 文档同步补充版本确认与 Windows 包使用说明
+- 继续修复 Windows 打包版 UI 启动逻辑，改为使用独立的内置 Streamlit 启动器
+- `screen` 失败时也会输出更友好的数据源诊断提示，不再直接抛出一大段异常
+- 全面重写 `docs/USER_GUIDE.md`，补充：模板怎么选、配置怎么改、持仓文件怎么填、输出文件各代表什么
+- README、功能状态、开发计划、AGENTS 文档同步更新
 
 ## 📦 产物
-- `ashare-strategy-windows-x86_64-v0.16.2.zip`
+- `ashare-strategy-windows-x86_64-v0.16.3.zip`
 - 源码包
 
 ## 🙌 使用建议
-- 下载 Windows 包后，先执行 `ashare-strategy.exe version` 确认版本
-- 若 `--help` 中命令不完整，通常说明你运行的仍是旧版包
-- 修复 Windows 问题时，建议优先核对 zip 文件名与版本输出是否一致
+- 如果你购买的是 Tinyshare 授权码，请务必使用 `provider: tushare` + `tushare_sdk: tinyshare` 的配置文件运行
+- 如果 `screen` 失败，请先执行 `doctor-data`，再确认是否仍在使用默认 `akshare` 配置
+- Windows 用户升级后，请重新验证 `ui`、`screen`、`init-workspace`、`version`
