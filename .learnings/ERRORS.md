@@ -300,9 +300,9 @@ Use an explicit relative path glob on Windows (for example `.\\ashare-strategy-w
 - Related Files: .github/workflows/release.yml, build_windows.py, AGENTS.md
 
 ### Resolution
-- **Resolved**: 2026-03-19T07:23:00Z
-- **Commit/PR**: 8dac4e4
-- **Notes**: Updated release workflow to print generated artifacts and use a Windows-safe relative glob path for release asset upload.
+- **Resolved**: 2026-03-19T07:40:00Z
+- **Commit/PR**: 80e215c
+- **Notes**: Initial relative glob fix was insufficient on GitHub Windows runner. Final fix switched to explicit `gh release upload <tag> <absolute-path> --clobber` after printing artifact paths.
 
 ---
 
