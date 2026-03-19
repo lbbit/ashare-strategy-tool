@@ -16,6 +16,7 @@ class DataSourceConfig(BaseModel):
     max_retries: int = 2
     tushare_token: str = ""
     tushare_sdk: str = "tushare"
+    offline_mode: bool = False
 
 
 class AccountConfig(BaseModel):
@@ -103,7 +104,7 @@ def load_config(path: str | Path | None = None) -> StrategyConfig:
     if resolved is None:
         return StrategyConfig()
     data = yaml.safe_load(resolved.read_text(encoding="utf-8")) or {}
-    if 'data_provider' in data or 'data_cache_dir' in data or 'use_cache' in data or 'tushare_token' in data or 'tushare_sdk' in data or 'timeout_seconds' in data or 'max_retries' in data:
+    if 'data_provider' in data or 'data_cache_dir' in data or 'use_cache' in data or 'tushare_token' in data or 'tushare_sdk' in data or 'timeout_seconds' in data or 'max_retries' in data or 'offline_mode' in data:
         data.setdefault('data_source', {})
         if 'data_provider' in data:
             data['data_source']['provider'] = data.pop('data_provider')
@@ -119,6 +120,8 @@ def load_config(path: str | Path | None = None) -> StrategyConfig:
             data['data_source']['timeout_seconds'] = data.pop('timeout_seconds')
         if 'max_retries' in data:
             data['data_source']['max_retries'] = data.pop('max_retries')
+        if 'offline_mode' in data:
+            data['data_source']['offline_mode'] = data.pop('offline_mode')
     if 'account_provider' in data or 'position_store_path' in data:
         data.setdefault('account', {})
         if 'account_provider' in data:

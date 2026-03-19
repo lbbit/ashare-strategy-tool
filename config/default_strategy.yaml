@@ -6,6 +6,7 @@ data_source:
   max_retries: 2
   tushare_token: ""
   tushare_sdk: tushare
+  offline_mode: false
 
 account:
   provider: json

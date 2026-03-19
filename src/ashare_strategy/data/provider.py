@@ -12,11 +12,12 @@ from ashare_strategy.data.health import ProviderHealthCheck
 
 
 class AkshareProvider:
-    def __init__(self, cache_dir: str = ".cache/market_data", use_cache: bool = True, timeout_seconds: int = 20, max_retries: int = 2) -> None:
+    def __init__(self, cache_dir: str = ".cache/market_data", use_cache: bool = True, timeout_seconds: int = 20, max_retries: int = 2, offline_mode: bool = False) -> None:
         self._ak = None
         self.cache = CsvCache(cache_dir, enabled=use_cache)
         self.timeout_seconds = timeout_seconds
         self.max_retries = max_retries
+        self.offline_mode = offline_mode
 
     def _akshare(self):
         if self._ak is None:
@@ -33,6 +34,11 @@ class AkshareProvider:
 
     def _with_retry(self, cache_key: str, fetcher: Callable[[], pd.DataFrame], allow_stale_cache: bool = True) -> pd.DataFrame:
         last_error = None
+        if self.offline_mode:
+            cached = self.cache.get_path(cache_key)
+            if cached.exists():
+                return pd.read_csv(cached)
+            raise RuntimeError(f"离线模式已启用，且本地缓存缺失: {cache_key}")
         for attempt in range(self.max_retries + 1):
             try:
                 return self.cache.load_or_fetch(cache_key, fetcher)
@@ -62,11 +68,11 @@ class AkshareProvider:
             if cache_path.exists():
                 checks.append({"name": "stock_spot", "status": "cache_fallback", "message": str(e), "cache_path": str(cache_path)})
                 status = 'degraded'
-                message = '实时接口失败，但本地缓存可用'
+                message = '实时接口失败，但本地缓存可用' + ('（当前为离线模式）' if self.offline_mode else '')
             else:
                 checks.append({"name": "stock_spot", "status": "error", "message": str(e)})
                 status = 'error'
-                message = '实时接口和缓存都不可用'
+                message = ('离线模式已启用，但本地缓存不可用' if self.offline_mode else '实时接口和缓存都不可用')
         return ProviderHealthCheck(provider='akshare', status=status, auth_ok=(status in {'ok', 'degraded'}), cache_enabled=self.cache.enabled, checks=checks, message=message)
 
     def get_stock_daily(self, symbol: str, start_date: Optional[str] = None, end_date: Optional[str] = None) -> pd.DataFrame:

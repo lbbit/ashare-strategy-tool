@@ -60,3 +60,5 @@
 | 文档 | 数据源调研与规划 | 新增数据可靠性评估与服务商适配计划文档 | ✅ |
 
 - [x] 新增 `doctor-data` 数据源诊断命令，支持 AkShare / Tushare(Tinyshare) 健康检查与错误分类提示
+
+- [x] `screen` / `backtest` / `plan` 支持 `--offline` 仅缓存模式，并在失败时输出数据源诊断提示

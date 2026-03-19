@@ -12,6 +12,7 @@ from rich.table import Table
 from ashare_strategy.core.config import load_config
 from ashare_strategy.execution.portfolio import TradingService
 from ashare_strategy.data.providers.router import build_data_provider
+from ashare_strategy.data.diagnostics import build_provider_diagnostics, format_provider_hint
 from ashare_strategy.reporting import export_report
 from ashare_strategy.planner import TradingPlanner
 from ashare_strategy.utils import success_response, error_response
@@ -21,8 +22,10 @@ app = typer.Typer(help="A股策略选股/回测工具")
 
 
 @app.command()
-def screen(config: str = typer.Option("config/default_strategy.yaml", help="配置文件路径"), output: str = typer.Option("table", help="输出格式：table/json"), template: str = typer.Option("", help="策略模板：beginner/conservative/aggressive")):
+def screen(config: str = typer.Option("config/default_strategy.yaml", help="配置文件路径"), output: str = typer.Option("table", help="输出格式：table/json"), template: str = typer.Option("", help="策略模板：beginner/conservative/aggressive"), offline: bool = typer.Option(False, help="仅使用缓存/离线模式")):
     cfg = load_config(config)
+    if offline:
+        cfg.data_source.offline_mode = True
     if template:
         cfg = apply_template(cfg, template)
     service = TradingService(cfg)
@@ -42,18 +45,24 @@ def screen(config: str = typer.Option("config/default_strategy.yaml", help="配�
 
 
 @app.command()
-def backtest(config: str = typer.Option("config/default_strategy.yaml"), initial_capital: float = 1_000_000, mode: str = typer.Option("rolling", help="rolling/simple"), export_csv: str = typer.Option("", help="导出交易结果 CSV 路径"), export_report_dir: str = typer.Option("", help="导出完整报告目录"), output: str = typer.Option("text", help="输出格式：text/json"), template: str = typer.Option("", help="策略模板：beginner/conservative/aggressive")):
+def backtest(config: str = typer.Option("config/default_strategy.yaml"), initial_capital: float = 1_000_000, mode: str = typer.Option("rolling", help="rolling/simple"), export_csv: str = typer.Option("", help="导出交易结果 CSV 路径"), export_report_dir: str = typer.Option("", help="导出完整报告目录"), output: str = typer.Option("text", help="输出格式：text/json"), template: str = typer.Option("", help="策略模板：beginner/conservative/aggressive"), offline: bool = typer.Option(False, help="仅使用缓存/离线模式")):
     cfg = load_config(config)
+    if offline:
+        cfg.data_source.offline_mode = True
     if template:
         cfg = apply_template(cfg, template)
     service = TradingService(cfg)
     try:
         result = service.backtest(initial_capital=initial_capital, mode=mode)
     except Exception as e:
+        diag = build_provider_diagnostics(cfg)
+        hint = format_provider_hint(diag)
         if output == "json":
-            print(json.dumps(error_response(str(e)), ensure_ascii=False, indent=2))
+            print(json.dumps(error_response(f"{e}", {"provider_diagnostics": diag, "hint": hint}), ensure_ascii=False, indent=2, default=str))
         else:
             print(f"[red]回测失败：{e}[/red]")
+            print(f"[yellow]{hint}[/yellow]")
+            print("[yellow]建议先执行：ashare-strategy doctor-data[/yellow]")
         raise typer.Exit(code=1)
     print_json = json.dumps(result, ensure_ascii=False, indent=2, default=str)
     if output == "json":
@@ -70,8 +79,10 @@ def backtest(config: str = typer.Option("config/default_strategy.yaml"), initial
 
 
 @app.command()
-def plan(config: str = typer.Option("config/default_strategy.yaml"), output_dir: str = typer.Option("daily_plan", help="导出交易计划目录"), output: str = typer.Option("text", help="输出格式：text/json"), template: str = typer.Option("", help="策略模板：beginner/conservative/aggressive")):
+def plan(config: str = typer.Option("config/default_strategy.yaml"), output_dir: str = typer.Option("daily_plan", help="导出交易计划目录"), output: str = typer.Option("text", help="输出格式：text/json"), template: str = typer.Option("", help="策略模板：beginner/conservative/aggressive"), offline: bool = typer.Option(False, help="仅使用缓存/离线模式")):
     cfg = load_config(config)
+    if offline:
+        cfg.data_source.offline_mode = True
     if template:
         cfg = apply_template(cfg, template)
     service = TradingService(cfg)
@@ -79,7 +90,14 @@ def plan(config: str = typer.Option("config/default_strategy.yaml"), output_dir:
     try:
         result = planner.export_daily_plan(output_dir)
     except Exception as e:
-        print(f"[red]生成交易计划失败：{e}[/red]")
+        diag = build_provider_diagnostics(cfg)
+        hint = format_provider_hint(diag)
+        if output == "json":
+            print(json.dumps(error_response(str(e), {"provider_diagnostics": diag, "hint": hint}), ensure_ascii=False, indent=2, default=str))
+        else:
+            print(f"[red]生成交易计划失败：{e}[/red]")
+            print(f"[yellow]{hint}[/yellow]")
+            print("[yellow]建议先执行：ashare-strategy doctor-data[/yellow]")
         raise typer.Exit(code=1)
     if output == "json":
         print(json.dumps(success_response(result['plan'], message="plan generated"), ensure_ascii=False, indent=2))

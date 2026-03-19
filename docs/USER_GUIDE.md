@@ -163,3 +163,15 @@ ashare-strategy doctor-data --output json
 - 是否只能依赖缓存降级
 
 如果你在排查“为什么今天拉不到数据”，建议先跑这个命令。
+
+## 2️⃣3️⃣ 离线/仅缓存模式
+如果网络不稳定，或者你只想复用本地缓存，可使用：
+```bash
+ashare-strategy backtest --offline
+ashare-strategy screen --offline
+ashare-strategy plan --offline
+```
+注意：
+- 离线模式不会主动联网拉数据
+- 如果本地没有对应缓存，命令会明确提示缓存缺失
+- 失败时会自动附带数据源诊断建议

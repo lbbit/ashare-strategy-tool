@@ -70,3 +70,5 @@ A 股策略选股、回测、每日交易计划、持仓分析、CLI、Web UI、
 - 新增 `docs/DATA_PROVIDER_RESEARCH.md`，后续所有数据源适配工作优先参考该路线和评估维度
 
 - 数据源现已支持健康检查入口，新增 CLI 命令 `doctor-data`；后续涉及 provider 行为调整时，应同步维护健康检查输出与文档。
+
+- 业务命令已接入数据源诊断提示，涉及 `screen/backtest/plan` 错误处理时，应保留对 `provider_diagnostics` 与 `hint` 的结构化输出兼容。
