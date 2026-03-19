@@ -125,3 +125,9 @@
 - `docs/USER_GUIDE.md`：新手使用说明
 - `docs/DATA_PROVIDER_RESEARCH.md`：数据源调研与适配计划
 - `AGENTS.md`：AI 持续开发约定
+
+
+## 最近新增的工程化要求同步
+- 增加 `version` 命令，便于用户确认运行中的实际版本
+- Windows 发布 zip 文件名增加版本号，减少用户误用旧包
+- 后续每次修复 Windows 打包问题，都应优先校验打包产物里的命令列表与版本号

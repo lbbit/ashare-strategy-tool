@@ -32,7 +32,7 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           files: |
-            ashare-strategy-windows-x86_64.zip
+            ashare-strategy-windows-x86_64-*.zip
           body_path: RELEASE_NOTES.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

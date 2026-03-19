@@ -175,3 +175,6 @@ ashare-strategy backtest --template aggressive --output json
 - `init-workspace` 现在会正确读取打包内置的默认配置文件，不再要求你手动准备 `config/default_strategy.yaml`
 - `ui` 在 Windows 打包版中已改为使用内置 Streamlit 启动脚本，避免出现 `No such option: -m`
 - 如果 `screen` 因网络/代理失败，建议先运行 `doctor-data`，或尝试带缓存的 `--offline` 模式
+
+- 新增 `ashare-strategy version` 命令，可快速查看当前版本。
+- Windows 发布 zip 现已带版本号，便于区分不同构建包。

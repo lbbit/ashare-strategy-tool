@@ -17,9 +17,18 @@ from ashare_strategy.data.diagnostics import build_provider_diagnostics, format_
 from ashare_strategy.reporting import export_report
 from ashare_strategy.planner import TradingPlanner
 from ashare_strategy.utils import success_response, error_response
+from importlib.metadata import version, PackageNotFoundError
+
 from ashare_strategy.templates import apply_template, TEMPLATE_PRESETS, export_template_configs
 
 app = typer.Typer(help="A股策略选股/回测工具")
+
+
+def _app_version() -> str:
+    try:
+        return version("ashare-strategy-tool")
+    except PackageNotFoundError:
+        return "0.0.0-dev"
 
 
 @app.command()
@@ -198,6 +207,15 @@ def doctor_data(config: str = typer.Option("config/default_strategy.yaml", help=
     for item in result.get('checks', []):
         table.add_row(str(item.get('name')), str(item.get('status')), str(item.get('message', item.get('rows', ''))))
     print(table)
+
+
+@app.command("version")
+def show_version(output: str = typer.Option("text", help="输出格式：text/json")):
+    payload = {"version": _app_version()}
+    if output == "json":
+        print(json.dumps(success_response(payload, message="version loaded"), ensure_ascii=False, indent=2))
+        return
+    print(f"ashare-strategy-tool {payload['version']}")
 
 
 @app.command()

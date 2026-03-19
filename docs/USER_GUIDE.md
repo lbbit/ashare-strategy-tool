@@ -381,3 +381,11 @@ ashare-strategy doctor-data
 ```bash
 ashare-strategy screen --offline
 ```
+
+
+## 2️⃣1️⃣ 查看当前版本
+可以执行：
+```bash
+ashare-strategy version
+```
+如果你在排查“我到底下载的是哪个版本”，这个命令会很有用。

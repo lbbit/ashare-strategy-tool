@@ -2,6 +2,12 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import tomllib
+
+
+def project_version() -> str:
+    data = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
+    return data["project"]["version"]
 
 
 def main():
@@ -16,12 +22,15 @@ def main():
         '--add-data', 'config/default_strategy.yaml;config',
         '--add-data', 'src/ashare_strategy/ui/app.py;src/ashare_strategy/ui',
         '--add-data', 'src/ashare_strategy/run_streamlit_app.py;.',
+        '--hidden-import', 'ashare_strategy.cli',
         'src/ashare_strategy/cli.py'
     ], check=True)
     out = Path('dist_release')
     out.mkdir(exist_ok=True)
     shutil.copy('dist/ashare-strategy.exe', out / 'ashare-strategy.exe')
-    shutil.make_archive('ashare-strategy-windows-x86_64', 'zip', root_dir='dist_release')
+    version = project_version()
+    archive_name = f'ashare-strategy-windows-x86_64-v{version}'
+    shutil.make_archive(archive_name, 'zip', root_dir='dist_release')
 
 
 if __name__ == '__main__':
