@@ -340,3 +340,8 @@ ashare-strategy backtest --template aggressive
 ```
 
 图形界面中也可以直接选择模板。
+
+## 2️⃣0️⃣ 关于数据源稳定性
+当前默认使用免费数据源，适合先体验和研究，但网络波动、上游接口变化时可能失败。
+如果你对稳定性要求更高，后续可以考虑接入付费或更稳定的数据源。
+详细调研请看：`docs/DATA_PROVIDER_RESEARCH.md`。

@@ -124,6 +124,7 @@ ashare-strategy ui
 - [📌 功能状态](docs/FEATURE_STATUS.md)
 - [🤖 AI 开发说明](AGENTS.md)
 - [📝 Release 说明](RELEASE_NOTES.md)
+- [🛰️ 数据源调研与适配计划](docs/DATA_PROVIDER_RESEARCH.md)
 
 ## 📦 下载与发布
 - GitHub Release 页面提供源码包和 Windows 打包版

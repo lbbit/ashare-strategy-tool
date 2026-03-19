@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+from pathlib import Path
+
+import yaml
+
 from ashare_strategy.core.config import StrategyConfig
 
 
@@ -35,3 +39,15 @@ def apply_template(config: StrategyConfig, template_name: str) -> StrategyConfig
     data = config.model_dump()
     data.update(preset)
     return StrategyConfig(**data)
+
+
+def export_template_configs(base_config: StrategyConfig, output_dir: str | Path) -> list[str]:
+    out = Path(output_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    files = []
+    for name in TEMPLATE_PRESETS:
+        cfg = apply_template(base_config, name)
+        file_path = out / f'{name}_strategy.yaml'
+        file_path.write_text(yaml.safe_dump(cfg.model_dump(mode='python'), allow_unicode=True, sort_keys=False), encoding='utf-8')
+        files.append(str(file_path))
+    return files

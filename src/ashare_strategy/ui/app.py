@@ -16,6 +16,12 @@ with st.sidebar:
     st.header("⚙️ 参数设置")
     user_mode = st.radio("使用模式", ["新手模式", "高级模式"], index=0)
     template_choice = st.selectbox("策略模板", ["beginner", "conservative", "aggressive"], index=0, help="可快速套用一组推荐参数")
+    template_desc = {
+        "beginner": "适合第一次使用，参数均衡，推荐普通用户先从这里开始。",
+        "conservative": "偏稳健，持股更少、持有更久，适合更看重波动控制的用户。",
+        "aggressive": "偏激进，调仓更快、持股更多，适合愿意接受更高波动的用户。",
+    }
+    st.caption(f"模板说明：{template_desc[template_choice]}")
     st.caption("建议新手先使用默认值，跑通后再逐步调整")
     initial_capital = st.number_input("初始资金", value=1_000_000.0, help="用于回测的起始资金，建议新手先保持默认值")
     use_cache = st.checkbox("启用缓存", value=True, help="开启后会复用本地缓存数据，速度更快，也更稳定")

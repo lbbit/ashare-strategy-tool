@@ -14,7 +14,7 @@ from ashare_strategy.execution.portfolio import TradingService
 from ashare_strategy.reporting import export_report
 from ashare_strategy.planner import TradingPlanner
 from ashare_strategy.utils import success_response, error_response
-from ashare_strategy.templates import apply_template, TEMPLATE_PRESETS
+from ashare_strategy.templates import apply_template, TEMPLATE_PRESETS, export_template_configs
 
 app = typer.Typer(help="A股策略选股/回测工具")
 
@@ -141,7 +141,8 @@ def init_workspace(
     plans_dir.mkdir(exist_ok=True)
     (out / "README.txt").write_text("这是初始化后的工作目录。你可以在这里保存报告、计划和自定义文件。", encoding="utf-8")
     (out / "custom_strategy.yaml").write_text(Path(config).read_text(encoding="utf-8"), encoding="utf-8")
-    payload = {"positions_initialized": True, "output_dir": str(out), "files": [str(out / "README.txt"), str(out / "custom_strategy.yaml")], "directories": [str(reports_dir), str(plans_dir)]}
+    template_files = export_template_configs(cfg, out)
+    payload = {"positions_initialized": True, "output_dir": str(out), "files": [str(out / "README.txt"), str(out / "custom_strategy.yaml"), *template_files], "directories": [str(reports_dir), str(plans_dir)]}
     if output == "json":
         print(json.dumps(success_response(payload, message="workspace initialized"), ensure_ascii=False, indent=2))
     else:
