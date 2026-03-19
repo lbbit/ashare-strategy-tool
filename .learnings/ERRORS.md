@@ -216,3 +216,30 @@ Use lower-permission endpoint for smoke test, or document that some endpoints re
 - Related Files: src/ashare_strategy/data/providers/tushare.py, docs/DATA_PROVIDER_RESEARCH.md
 
 ---
+## [ERR-20260319-010] tushare_invalid_token
+
+**Logged**: 2026-03-19T02:24:00Z
+**Priority**: medium
+**Status**: pending
+**Area**: backend
+
+### Summary
+Second user-provided Tushare token failed authentication entirely.
+
+### Error
+```
+您的token不对，请确认。
+```
+
+### Context
+- Smoke-tested low-volume endpoints: stock_basic, trade_cal, daily, index_daily
+- All returned token invalid message immediately
+
+### Suggested Fix
+Document distinction between invalid token and valid token without endpoint permissions; add provider-side auth check helper in future.
+
+### Metadata
+- Reproducible: yes
+- Related Files: src/ashare_strategy/data/providers/tushare.py, docs/USER_GUIDE.md, docs/DATA_PROVIDER_RESEARCH.md
+
+---
