@@ -92,12 +92,27 @@ def positions(config: str = typer.Option("config/default_strategy.yaml"), output
 
 
 @app.command()
-def save_sample_positions(config: str = typer.Option("config/default_strategy.yaml")):
+def save_sample_positions(config: str = typer.Option("config/default_strategy.yaml"), output: str = typer.Option("text", help="输出格式：text/json")):
     cfg = load_config(config)
     service = TradingService(cfg)
     sample = [{"stock_code": "000001", "stock_name": "示例股票", "buy_date": "2026-03-18", "buy_price": 12.34, "shares": 1000}]
     service.save_positions(sample)
-    print("[green]已写入示例持仓[/green]")
+    if output == "json":
+        print(json.dumps(success_response(sample, message="sample positions saved"), ensure_ascii=False, indent=2))
+    else:
+        print("[green]已写入示例持仓[/green]")
+
+
+@app.command()
+def init_account(config: str = typer.Option("config/default_strategy.yaml"), output: str = typer.Option("text", help="输出格式：text/json")):
+    cfg = load_config(config)
+    service = TradingService(cfg)
+    sample = [{"stock_code": "000001", "stock_name": "示例股票", "buy_date": "2026-03-18", "buy_price": 12.34, "shares": 1000}]
+    service.save_positions(sample)
+    if output == "json":
+        print(json.dumps(success_response(sample, message="account initialized"), ensure_ascii=False, indent=2))
+    else:
+        print("[green]已初始化示例持仓文件，可按需修改为你的真实持仓[/green]")
 
 
 @app.command()

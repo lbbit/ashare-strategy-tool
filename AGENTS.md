@@ -58,3 +58,5 @@ A 股策略选股、回测、每日交易计划、持仓分析、CLI、Web UI、
 - 提高对普通用户和 AI Agent 的可用性
 
 - 账户来源已开始 router 化，后续可扩展 broker/api/manual 等更多实现
+
+- CLI 已新增 `init-account`，用于初始化普通用户的持仓模板，并兼容结构化输出

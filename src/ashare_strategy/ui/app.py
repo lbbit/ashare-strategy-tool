@@ -16,8 +16,8 @@ with st.sidebar:
     st.header("⚙️ 参数设置")
     user_mode = st.radio("使用模式", ["新手模式", "高级模式"], index=0)
     st.caption("建议新手先使用默认值，跑通后再逐步调整")
-    initial_capital = st.number_input("初始资金", value=1_000_000.0)
-    use_cache = st.checkbox("启用缓存", value=True)
+    initial_capital = st.number_input("初始资金", value=1_000_000.0, help="用于回测的起始资金，建议新手先保持默认值")
+    use_cache = st.checkbox("启用缓存", value=True, help="开启后会复用本地缓存数据，速度更快，也更稳定")
     if user_mode == "新手模式":
         st.info("新手模式下会隐藏部分高级参数，建议先使用默认值观察结果。")
         board_min_volume = 120.0
@@ -28,13 +28,13 @@ with st.sidebar:
         lookback_days = 365
         rebalance_interval = 7
     else:
-        board_min_volume = st.number_input("板块近5日最小成交量", value=120.0)
-        stock_float_cap_max = st.number_input("流通A股上限", value=1_000_000_000.0)
-        first_day_gain_pct = st.number_input("首日涨幅阈值(%)", value=7.0)
-        max_positions = st.number_input("最多持股数", value=3, step=1)
-        hold_days = st.number_input("最大持有天数", value=5, step=1)
-        lookback_days = st.number_input("回测天数", value=365, step=10)
-        rebalance_interval = st.number_input("调仓周期", value=7, step=1)
+        board_min_volume = st.number_input("板块近5日最小成交量", value=120.0, help="用于筛选板块热度，建议新手先保持默认值")
+        stock_float_cap_max = st.number_input("流通A股上限", value=1_000_000_000.0, help="用于偏向小中盘股票，值越小筛选越严格")
+        first_day_gain_pct = st.number_input("首日涨幅阈值(%)", value=7.0, help="用于定义强势首阳线，建议新手先保持默认值")
+        max_positions = st.number_input("最多持股数", value=3, step=1, help="组合最多同时持有几只股票")
+        hold_days = st.number_input("最大持有天数", value=5, step=1, help="单只股票最多持有几天")
+        lookback_days = st.number_input("回测天数", value=365, step=10, help="回看过去多少天历史表现")
+        rebalance_interval = st.number_input("调仓周期", value=7, step=1, help="每隔多少天检查一次是否换仓")
 
 cfg = StrategyConfig(
     board_min_volume=board_min_volume,
