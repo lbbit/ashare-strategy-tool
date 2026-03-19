@@ -1,15 +1,16 @@
 # Release Notes
 
 ## ✨ 本次更新亮点
-- 修复 Windows 打包版首次运行找不到默认配置文件的问题
-- Windows 压缩包解压后可直接运行 `ashare-strategy.exe screen`
-- 继续优化 README 与新手使用说明，补充 Windows 打包版使用方式
-- 保留 Release 自动上传 Windows 压缩包能力
+- 新增统一数据源接口抽象，为后续接入更多免费/付费数据源打基础
+- 拆分服务层：筛选、回测、持仓职责更清晰，降低后续扩展难度
+- CLI 新增 `screen --output json`，更方便 AI Agent 和自动化脚本集成
+- 同步更新架构文档、开发计划、功能状态和使用说明
 
 ## 📦 产物
 - `ashare-strategy-windows-x86_64.zip`
 - 源码包
 
 ## 🙌 使用建议
-- Windows 用户解压后可直接运行：`.\\ashare-strategy.exe screen`
-- 首次建议依次运行：`screen`、`save-sample-positions`、`positions`、`plan`
+- 普通用户继续使用 `screen` / `plan` / `backtest`
+- 自动化用户可使用 `ashare-strategy screen --output json`
+- 后续版本将继续朝多数据源、多账户、Agent 友好方向演进
