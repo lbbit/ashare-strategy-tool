@@ -345,3 +345,10 @@ ashare-strategy backtest --template aggressive
 当前默认使用免费数据源，适合先体验和研究，但网络波动、上游接口变化时可能失败。
 如果你对稳定性要求更高，后续可以考虑接入付费或更稳定的数据源。
 详细调研请看：`docs/DATA_PROVIDER_RESEARCH.md`。
+
+## 2️⃣1️⃣ 关于 Tushare Pro 配置
+如果你想使用 Tushare Pro，需要在配置文件 `data_source.tushare_token` 中填写 token。
+但要注意：
+- token 有效 ≠ 所有接口都有权限
+- 某些接口还取决于账号权限或积分等级
+- 如果提示“没有接口访问权限”，通常不是程序坏了，而是当前账号权限不足

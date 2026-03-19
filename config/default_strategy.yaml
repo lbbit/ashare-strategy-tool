@@ -2,6 +2,9 @@ data_source:
   provider: akshare
   cache_dir: .cache/market_data
   use_cache: true
+  timeout_seconds: 20
+  max_retries: 2
+  tushare_token: ""
 
 account:
   provider: json

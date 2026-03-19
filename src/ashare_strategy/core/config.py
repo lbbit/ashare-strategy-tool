@@ -12,6 +12,9 @@ class DataSourceConfig(BaseModel):
     provider: str = "akshare"
     cache_dir: str = ".cache/market_data"
     use_cache: bool = True
+    timeout_seconds: int = 20
+    max_retries: int = 2
+    tushare_token: str = ""
 
 
 class AccountConfig(BaseModel):
@@ -99,7 +102,7 @@ def load_config(path: str | Path | None = None) -> StrategyConfig:
     if resolved is None:
         return StrategyConfig()
     data = yaml.safe_load(resolved.read_text(encoding="utf-8")) or {}
-    if 'data_provider' in data or 'data_cache_dir' in data or 'use_cache' in data:
+    if 'data_provider' in data or 'data_cache_dir' in data or 'use_cache' in data or 'tushare_token' in data or 'timeout_seconds' in data or 'max_retries' in data:
         data.setdefault('data_source', {})
         if 'data_provider' in data:
             data['data_source']['provider'] = data.pop('data_provider')
@@ -107,6 +110,12 @@ def load_config(path: str | Path | None = None) -> StrategyConfig:
             data['data_source']['cache_dir'] = data.pop('data_cache_dir')
         if 'use_cache' in data:
             data['data_source']['use_cache'] = data.pop('use_cache')
+        if 'tushare_token' in data:
+            data['data_source']['tushare_token'] = data.pop('tushare_token')
+        if 'timeout_seconds' in data:
+            data['data_source']['timeout_seconds'] = data.pop('timeout_seconds')
+        if 'max_retries' in data:
+            data['data_source']['max_retries'] = data.pop('max_retries')
     if 'account_provider' in data or 'position_store_path' in data:
         data.setdefault('account', {})
         if 'account_provider' in data:

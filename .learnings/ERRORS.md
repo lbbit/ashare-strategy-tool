@@ -189,3 +189,30 @@ Bundle default config into the executable and resolve config path from PyInstall
 - Related Files: src/ashare_strategy/core/config.py, build_windows.py, README.md, docs/USER_GUIDE.md
 
 ---
+## [ERR-20260319-009] tushare_permission_limit
+
+**Logged**: 2026-03-19T02:18:00Z
+**Priority**: medium
+**Status**: pending
+**Area**: backend
+
+### Summary
+Tushare smoke test reached provider successfully but test token lacks permission for `index_daily` benchmark endpoint.
+
+### Error
+```
+Exception: 抱歉，您没有接口访问权限，权限的具体详情访问：https://tushare.pro/document/1?doc_id=108。
+```
+
+### Context
+- Token used: user-provided test token
+- Minimal smoke test endpoint: `index_daily(ts_code='000300.SH')`
+
+### Suggested Fix
+Use lower-permission endpoint for smoke test, or document that some endpoints require higher permissions and keep provider partially implemented.
+
+### Metadata
+- Reproducible: yes
+- Related Files: src/ashare_strategy/data/providers/tushare.py, docs/DATA_PROVIDER_RESEARCH.md
+
+---

@@ -20,3 +20,25 @@
 - Tags: github, ssh, git
 
 ---
+## [LRN-20260319-008] best_practice
+
+**Logged**: 2026-03-19T02:10:00Z
+**Priority**: high
+**Status**: pending
+**Area**: backend
+
+### Summary
+Data provider layer should support reliable free-source fallback plus token-configured premium provider selection without breaking local persisted config.
+
+### Details
+User clarified long-term need: keep free source usable, but add Tushare Pro provider with configurable token persistence and avoid wasting quota during testing. This implies provider routing, credential storage in config, low-volume smoke tests, and reliability improvements such as retries/timeouts/cache fallback.
+
+### Suggested Action
+Implement provider config fields for auth, add Tushare provider with minimal endpoint usage, and harden AkShare provider with retries/timeouts/cache fallback semantics.
+
+### Metadata
+- Source: conversation
+- Related Files: src/ashare_strategy/data/provider.py, src/ashare_strategy/core/config.py, config/default_strategy.yaml
+- Tags: provider, reliability, tushare
+
+---
