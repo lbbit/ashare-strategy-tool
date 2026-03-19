@@ -178,3 +178,15 @@ ashare-strategy backtest --template aggressive --output json
 
 - 新增 `ashare-strategy version` 命令，可快速查看当前版本。
 - Windows 发布 zip 现已带版本号，便于区分不同构建包。
+
+
+## Tinyshare 配置示例
+如果你购买的是 Tinyshare 授权码，不要继续直接用默认 `akshare` 配置。
+应改为：
+```yaml
+data_source:
+  provider: tushare
+  tushare_sdk: tinyshare
+  tushare_token: "你的授权码"
+```
+然后通过 `--config your_config.yaml` 或在工作区里维护自己的配置文件来运行。

@@ -11,7 +11,7 @@ from rich.table import Table
 
 from ashare_strategy.core.config import load_config, resolve_config_path
 from ashare_strategy.execution.portfolio import TradingService
-from ashare_strategy.runtime import is_frozen, bundle_root
+from ashare_strategy.runtime import is_frozen, bundle_root, packaged_data_dir
 from ashare_strategy.data.providers.router import build_data_provider
 from ashare_strategy.data.diagnostics import build_provider_diagnostics, format_provider_hint
 from ashare_strategy.reporting import export_report
@@ -32,14 +32,25 @@ def _app_version() -> str:
 
 
 @app.command()
-def screen(config: str = typer.Option("config/default_strategy.yaml", help="配置文件路径"), output: str = typer.Option("table", help="输出格式：table/json"), template: str = typer.Option("", help="策略模板：beginner/conservative/aggressive"), offline: bool = typer.Option(False, help="仅使用缓存/离线模式")):
+def screen(config: str = typer.Option("config/default_strategy.yaml", help="配置文件路径"), output: str = typer.Option("table", help="输出格式：table/json"), template: str = typer.Option("", help="策略模板：beginner/conservative/aggressive/custom"), offline: bool = typer.Option(False, help="仅使用缓存/离线模式")):
     cfg = load_config(config)
     if offline:
         cfg.data_source.offline_mode = True
-    if template:
+    if template and template != "custom":
         cfg = apply_template(cfg, template)
     service = TradingService(cfg)
-    df = service.screen()
+    try:
+        df = service.screen()
+    except Exception as e:
+        diag = build_provider_diagnostics(cfg)
+        hint = format_provider_hint(diag)
+        if output == "json":
+            print(json.dumps(error_response(str(e), {"provider_diagnostics": diag, "hint": hint}), ensure_ascii=False, indent=2, default=str))
+        else:
+            print(f"[red]选股失败：{e}[/red]")
+            print(f"[yellow]{hint}[/yellow]")
+            print("[yellow]建议先执行：ashare-strategy doctor-data[/yellow]")
+        raise typer.Exit(code=1)
     if output == "json":
         print(json.dumps(success_response(df.to_dict(orient="records"), message="screen completed"), ensure_ascii=False, indent=2, default=str))
         return
@@ -221,8 +232,8 @@ def show_version(output: str = typer.Option("text", help="输出格式：text/js
 @app.command()
 def ui():
     if is_frozen():
-        runner = bundle_root() / "run_streamlit_app.py"
-        subprocess.run([sys.executable, str(runner)], check=False)
+        runner = packaged_data_dir() / "run_streamlit_app.py"
+        subprocess.run([str(runner)], check=False)
         return
     subprocess.run([sys.executable, "-m", "streamlit", "run", "src/ashare_strategy/ui/app.py"], check=False)
 

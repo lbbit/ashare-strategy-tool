@@ -18,3 +18,7 @@ def executable_dir() -> Path:
     if is_frozen():
         return Path(sys.executable).resolve().parent
     return Path.cwd()
+
+
+def packaged_data_dir() -> Path:
+    return executable_dir() / 'runtime_data'

@@ -78,3 +78,5 @@ A 股策略选股、回测、每日交易计划、持仓分析、CLI、Web UI、
 - Windows 打包模式下，UI 不能依赖 `sys.executable -m streamlit`，需通过内置启动脚本 `run_streamlit_app.py` 启动；涉及打包逻辑时同步检查 `build_windows.py`。
 
 - Windows 打包问题修复后，必须额外校验：`--help` 命令列表完整、`version` 命令可用、zip 文件名包含版本号，避免用户下载旧包或误判版本。
+
+- `docs/USER_GUIDE.md` 需要面向纯新手写作，不仅说明命令，还要解释“为什么要做这一步”“生成的文件代表什么”“字段怎么改”，新增命令或配置时必须同步补充表格说明。

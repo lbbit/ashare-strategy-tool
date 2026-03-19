@@ -63,5 +63,6 @@
 | 数据 | Tushare/Tinyshare 兼容 | 支持配置化切换 SDK 与认证信息持久化 | ✅ |
 | 工程 | Windows 打包运行修复 | 修复 `init-workspace` 配置读取与 `ui` 启动问题 | ✅ |
 | CLI | 版本查询命令 | 支持 `ashare-strategy version` 查询当前版本 | ✅ |
+| CLI | 选股失败诊断提示 | `screen` 失败时输出友好诊断信息 | ✅ |
 | 工程 | 版本化打包文件名 | Windows zip 文件名自动包含版本号 | ✅ |
 
