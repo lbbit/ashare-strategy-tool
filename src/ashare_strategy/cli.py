@@ -9,8 +9,9 @@ import typer
 from rich import print
 from rich.table import Table
 
-from ashare_strategy.core.config import load_config
+from ashare_strategy.core.config import load_config, resolve_config_path
 from ashare_strategy.execution.portfolio import TradingService
+from ashare_strategy.runtime import is_frozen, bundle_root
 from ashare_strategy.data.providers.router import build_data_provider
 from ashare_strategy.data.diagnostics import build_provider_diagnostics, format_provider_hint
 from ashare_strategy.reporting import export_report
@@ -159,7 +160,10 @@ def init_workspace(
     reports_dir.mkdir(exist_ok=True)
     plans_dir.mkdir(exist_ok=True)
     (out / "README.txt").write_text("这是初始化后的工作目录。你可以在这里保存报告、计划和自定义文件。", encoding="utf-8")
-    (out / "custom_strategy.yaml").write_text(Path(config).read_text(encoding="utf-8"), encoding="utf-8")
+    resolved_config = resolve_config_path(config)
+    if resolved_config is None or not resolved_config.exists():
+        raise typer.BadParameter(f"配置文件不存在: {config}")
+    (out / "custom_strategy.yaml").write_text(resolved_config.read_text(encoding="utf-8"), encoding="utf-8")
     template_files = export_template_configs(cfg, out)
     payload = {"positions_initialized": True, "output_dir": str(out), "files": [str(out / "README.txt"), str(out / "custom_strategy.yaml"), *template_files], "directories": [str(reports_dir), str(plans_dir)]}
     if output == "json":
@@ -198,6 +202,10 @@ def doctor_data(config: str = typer.Option("config/default_strategy.yaml", help=
 
 @app.command()
 def ui():
+    if is_frozen():
+        runner = bundle_root() / "run_streamlit_app.py"
+        subprocess.run([sys.executable, str(runner)], check=False)
+        return
     subprocess.run([sys.executable, "-m", "streamlit", "run", "src/ashare_strategy/ui/app.py"], check=False)
 
 

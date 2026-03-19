@@ -169,3 +169,9 @@ ashare-strategy backtest --template aggressive --output json
 
 - `screen` / `backtest` / `plan` 已支持 `--offline`，可在网络不稳定时尝试仅使用本地缓存。
 - 这些命令失败时会自动附带数据源诊断提示，帮助判断是网络、认证、权限还是缓存问题。
+
+
+## Windows 打包版补充说明
+- `init-workspace` 现在会正确读取打包内置的默认配置文件，不再要求你手动准备 `config/default_strategy.yaml`
+- `ui` 在 Windows 打包版中已改为使用内置 Streamlit 启动脚本，避免出现 `No such option: -m`
+- 如果 `screen` 因网络/代理失败，建议先运行 `doctor-data`，或尝试带缓存的 `--offline` 模式

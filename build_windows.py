@@ -12,7 +12,10 @@ def main():
         '--onefile',
         '--collect-all', 'akshare',
         '--collect-all', 'streamlit',
+        '--collect-all', 'tinyshare',
         '--add-data', 'config/default_strategy.yaml;config',
+        '--add-data', 'src/ashare_strategy/ui/app.py;src/ashare_strategy/ui',
+        '--add-data', 'src/ashare_strategy/run_streamlit_app.py;.',
         'src/ashare_strategy/cli.py'
     ], check=True)
     out = Path('dist_release')

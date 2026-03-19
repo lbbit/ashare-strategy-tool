@@ -74,3 +74,5 @@ A 股策略选股、回测、每日交易计划、持仓分析、CLI、Web UI、
 - 业务命令已接入数据源诊断提示，涉及 `screen/backtest/plan` 错误处理时，应保留对 `provider_diagnostics` 与 `hint` 的结构化输出兼容。
 
 - 数据源抽象已扩展到 AkShare / Tushare / Tinyshare 兼容模式，并支持离线模式；后续新增 provider 时需同步维护 `doctor-data`、UI 健康检查和错误诊断输出。
+
+- Windows 打包模式下，UI 不能依赖 `sys.executable -m streamlit`，需通过内置启动脚本 `run_streamlit_app.py` 启动；涉及打包逻辑时同步检查 `build_windows.py`。

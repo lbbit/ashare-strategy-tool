@@ -363,3 +363,21 @@ ashare-strategy doctor-data
 4. 最后再比较不同模板和参数
 
 这样最不容易把自己绕晕。🙂
+
+
+## 2️⃣0️⃣ Windows 打包版常见问题
+### 1. `init-workspace` 提示找不到 `config/default_strategy.yaml`
+这通常是旧版打包文件的问题。新版本已经修复，会自动读取打包内置配置。
+
+### 2. `ui` 提示 `No such option: -m`
+这也是旧版打包方式的问题。新版本已经改为使用内置启动脚本。
+
+### 3. `screen` 报代理/网络错误
+这通常不是程序本身坏了，而是当前网络、代理、免费数据源上游出了问题。建议先执行：
+```bash
+ashare-strategy doctor-data
+```
+如本地已有缓存，也可尝试：
+```bash
+ashare-strategy screen --offline
+```

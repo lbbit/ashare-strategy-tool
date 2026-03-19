@@ -270,3 +270,31 @@ Add a small `get_path()` helper to `CsvCache` and re-run CLI smoke tests after a
 - Related Files: src/ashare_strategy/data/cache.py, src/ashare_strategy/data/provider.py, src/ashare_strategy/cli.py
 
 ---
+## [ERR-20260319-012] windows_bundle_init_workspace_and_ui
+
+**Logged**: 2026-03-19T03:02:00Z
+**Priority**: high
+**Status**: pending
+**Area**: backend
+
+### Summary
+Windows packaged executable still had two usability issues: `init-workspace` read raw config path instead of resolved bundled config, and `ui` attempted `python -m streamlit` through the bundled exe interpreter which Typer interpreted incorrectly.
+
+### Error
+```
+FileNotFoundError: [Errno 2] No such file or directory: 'config\\default_strategy.yaml'
+No such option: -m
+```
+
+### Context
+- User ran packaged `ashare-strategy.exe init-workspace`
+- User ran packaged `ashare-strategy.exe ui`
+
+### Suggested Fix
+Use resolved config path when copying config in `init-workspace`, and launch a bundled entry script directly for Streamlit in frozen mode instead of `sys.executable -m streamlit`.
+
+### Metadata
+- Reproducible: yes
+- Related Files: src/ashare_strategy/cli.py, build_windows.py
+
+---
