@@ -58,7 +58,7 @@
 | CLI | 模板文件导出 | `init-workspace` 自动生成多套策略模板配置文件 | ✅ |
 | UI | 模板说明增强 | 图形界面展示模板适用说明 | ✅ |
 | 文档 | 数据源调研与规划 | 新增数据可靠性评估与服务商适配计划文档 | ✅ |
+| 数据 | 数据源诊断 | 支持 `doctor-data` 健康检查与错误分类 | ✅ |
+| 数据 | 离线模式 | 支持 `screen/backtest/plan --offline` 仅使用缓存 | ✅ |
+| 数据 | Tushare/Tinyshare 兼容 | 支持配置化切换 SDK 与认证信息持久化 | ✅ |
 
-- [x] 新增 `doctor-data` 数据源诊断命令，支持 AkShare / Tushare(Tinyshare) 健康检查与错误分类提示
-
-- [x] `screen` / `backtest` / `plan` 支持 `--offline` 仅缓存模式，并在失败时输出数据源诊断提示
