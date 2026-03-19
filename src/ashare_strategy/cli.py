@@ -116,6 +116,27 @@ def init_account(config: str = typer.Option("config/default_strategy.yaml"), out
 
 
 @app.command()
+def init_workspace(
+    config: str = typer.Option("config/default_strategy.yaml"),
+    output_dir: str = typer.Option("workspace_init", help="初始化输出目录"),
+    output: str = typer.Option("text", help="输出格式：text/json")
+):
+    cfg = load_config(config)
+    service = TradingService(cfg)
+    sample = [{"stock_code": "000001", "stock_name": "示例股票", "buy_date": "2026-03-18", "buy_price": 12.34, "shares": 1000}]
+    service.save_positions(sample)
+    from pathlib import Path
+    out = Path(output_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "README.txt").write_text("这是初始化后的工作目录。你可以在这里保存报告、计划和自定义文件。", encoding="utf-8")
+    payload = {"positions_initialized": True, "output_dir": str(out), "files": [str(out / "README.txt")]}
+    if output == "json":
+        print(json.dumps(success_response(payload, message="workspace initialized"), ensure_ascii=False, indent=2))
+    else:
+        print(f"[green]已完成初始化：持仓模板已写入，工作目录已创建 -> {out}[/green]")
+
+
+@app.command()
 def ui():
     subprocess.run([sys.executable, "-m", "streamlit", "run", "src/ashare_strategy/ui/app.py"], check=False)
 

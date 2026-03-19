@@ -301,3 +301,21 @@ ashare-strategy init-account --output json
 ```
 
 这个命令会帮你生成一个示例持仓，你可以在此基础上改成自己的真实持仓。
+
+## 1️⃣8️⃣ 一键初始化首次使用环境
+如果你希望一次性完成“持仓模板 + 工作目录”的初始化，可以运行：
+
+```bash
+ashare-strategy init-workspace
+```
+
+如果你希望给 AI Agent 或脚本读取，也可以运行：
+
+```bash
+ashare-strategy init-workspace --output json
+```
+
+这个命令会：
+- 初始化示例持仓
+- 创建一个工作目录
+- 写入一个说明文件，方便你整理报告和计划

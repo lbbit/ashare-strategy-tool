@@ -20,6 +20,7 @@ with st.sidebar:
     use_cache = st.checkbox("启用缓存", value=True, help="开启后会复用本地缓存数据，速度更快，也更稳定")
     if user_mode == "新手模式":
         st.info("新手模式下会隐藏部分高级参数，建议先使用默认值观察结果。")
+        st.success("推荐设置：初始资金 100万、回测天数 365、最多持股数 3、调仓周期 7 天")
         board_min_volume = 120.0
         stock_float_cap_max = 1_000_000_000.0
         first_day_gain_pct = 7.0
