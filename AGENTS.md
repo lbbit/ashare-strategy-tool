@@ -78,6 +78,6 @@ A 股策略选股、回测、每日交易计划、持仓分析、CLI、Web UI、
 - Windows 打包模式下，UI 不能依赖 `sys.executable -m streamlit`，需通过内置启动脚本 `run_streamlit_app.py` 启动；涉及打包逻辑时同步检查 `build_windows.py`。
 
 - Windows 打包问题修复后，必须额外校验：`--help` 命令列表完整、`version` 命令可用、zip 文件名包含版本号，避免用户下载旧包或误判版本。
-- GitHub Release 工作流中，Windows runner 上传附件时应优先使用带 `./` 或 `.\\` 前缀的相对路径 glob，并在上传前打印产物列表；仅看到 workflow success 不能代表 release assets 已存在。
+- GitHub Release 工作流中，Windows runner 下不要只依赖 release action 的 glob 匹配；应在上传前打印产物列表，并优先用 `gh release upload <tag> <absolute-path> --clobber` 这种显式上传方式。仅看到 workflow success 不能代表 release assets 已存在。
 
 - `docs/USER_GUIDE.md` 需要面向纯新手写作，不仅说明命令，还要解释“为什么要做这一步”“生成的文件代表什么”“字段怎么改”，新增命令或配置时必须同步补充表格说明。

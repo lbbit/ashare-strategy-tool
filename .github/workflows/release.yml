@@ -33,12 +33,21 @@ jobs:
       - name: Show generated artifacts
         shell: pwsh
         run: |
-          Get-ChildItem -Path . -Filter "ashare-strategy-windows-x86_64-*.zip"
-          Get-ChildItem -Path dist_release -Recurse
+          Get-ChildItem -Path . -Filter "ashare-strategy-windows-x86_64-*.zip" | Format-Table FullName, Length -AutoSize
+          Get-ChildItem -Path dist_release -Recurse | Format-Table FullName, Length -AutoSize
+      - name: Upload release asset
+        shell: pwsh
+        run: |
+          $asset = Get-ChildItem -Path . -Filter "ashare-strategy-windows-x86_64-*.zip" | Select-Object -First 1
+          if (-not $asset) {
+            Write-Error "Windows release zip not found"
+            exit 1
+          }
+          gh release upload $env:GITHUB_REF_NAME $asset.FullName --repo $env:GITHUB_REPOSITORY --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: softprops/action-gh-release@v2
         with:
-          files: |
-            .\ashare-strategy-windows-x86_64-*.zip
           body_path: RELEASE_NOTES.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
