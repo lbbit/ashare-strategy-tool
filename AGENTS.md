@@ -18,6 +18,7 @@ A 股策略选股、回测、每日交易计划、持仓分析、CLI、Web UI、
 - `src/ashare_strategy/execution/`：当前交易服务与持仓持久化
 - `src/ashare_strategy/planner.py`：每日交易计划与导出
 - `src/ashare_strategy/reporting.py`：报告导出
+- `src/ashare_strategy/services/`：筛选、回测、持仓、规划等服务拆分层
 - `src/ashare_strategy/ui/`：Streamlit 界面
 - `tests/`：单元测试
 - `docs/`：开发计划、架构建议、功能状态、详细使用说明

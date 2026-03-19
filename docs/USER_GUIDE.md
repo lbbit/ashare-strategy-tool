@@ -251,3 +251,12 @@ ashare-strategy plan --output-dir daily_plan
 ```
 
 🎉 先把流程跑通，再考虑改参数、做回测、研究细节。
+
+## 1️⃣4️⃣ 给 AI 或自动化工具使用
+如果你希望把 CLI 结果交给 AI Agent 或其他脚本处理，可以使用 JSON 输出：
+
+```bash
+ashare-strategy screen --output json
+```
+
+这样更适合自动化读取。

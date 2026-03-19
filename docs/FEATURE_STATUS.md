@@ -31,3 +31,6 @@
 | 文档 | 详细使用说明 | 新增 docs/USER_GUIDE.md | ✅ |
 | 工程 | AGENTS 文档 | 新增 AGENTS.md 便于 AI 持续开发 | ✅ |
 | 架构 | 架构梳理文档 | 新增长期扩展架构审视与演进建议 | ✅ |
+| 架构 | 数据源接口抽象 | 增加 provider router 与统一接口基类 | ✅ |
+| 架构 | 服务拆分 | 拆分筛选、回测、持仓服务，降低 TradingService 耦合 | ✅ |
+| CLI | JSON 输出 | screen 命令支持 `--output json` 方便 Agent 集成 | ✅ |

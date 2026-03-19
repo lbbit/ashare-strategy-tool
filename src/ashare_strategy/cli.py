@@ -18,10 +18,13 @@ app = typer.Typer(help="A股策略选股/回测工具")
 
 
 @app.command()
-def screen(config: str = typer.Option("config/default_strategy.yaml", help="配置文件路径")):
+def screen(config: str = typer.Option("config/default_strategy.yaml", help="配置文件路径"), output: str = typer.Option("table", help="输出格式：table/json")):
     cfg = load_config(config)
     service = TradingService(cfg)
     df = service.screen()
+    if output == "json":
+        print(json.dumps(df.to_dict(orient="records"), ensure_ascii=False, indent=2, default=str))
+        return
     if df.empty:
         print("[yellow]没有筛选到符合条件的股票[/yellow]")
         return
