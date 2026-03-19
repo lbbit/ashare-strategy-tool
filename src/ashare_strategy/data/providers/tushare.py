@@ -16,6 +16,18 @@ class TushareProvider:
         self._pro = None
         self.sdk = sdk
 
+    def capabilities(self) -> dict[str, bool]:
+        return {
+            "spot": False,
+            "board_names": False,
+            "board_hist": False,
+            "board_cons": False,
+            "daily": True,
+            "benchmark_daily": True,
+            "trade_range": True,
+            "lightweight_screen": True,
+        }
+
     def _client(self):
         if self._pro is None:
             if self.sdk == 'tinyshare':

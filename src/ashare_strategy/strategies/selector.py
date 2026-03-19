@@ -14,7 +14,9 @@ class StrategySelector:
     def __init__(self, provider: AkshareProvider, config: StrategyConfig) -> None:
         self.provider = provider
         self.config = config
-        self.spot = provider.get_spot()
+        caps = provider.capabilities() if hasattr(provider, 'capabilities') else {}
+        self.capabilities = caps
+        self.spot = provider.get_spot() if caps.get('spot') else pd.DataFrame(columns=['代码', '名称', '流通股'])
 
     def _is_st(self, name: str) -> bool:
         return "ST" in str(name).upper()
@@ -81,7 +83,7 @@ class StrategySelector:
             )
         return None
 
-    def select_candidates(self) -> pd.DataFrame:
+    def _select_board_candidates(self) -> pd.DataFrame:
         boards_df = self.provider.get_board_names()
         board_col = "板块名称" if "板块名称" in boards_df.columns else boards_df.columns[0]
         passed_boards = self._board_filter(boards_df[board_col].tolist())
@@ -101,3 +103,54 @@ class StrategySelector:
         if df.empty:
             return df
         return df.sort_values("float_shares").head(self.config.max_positions).reset_index(drop=True)
+
+    def _select_lightweight_candidates(self) -> pd.DataFrame:
+        sample_universe = [
+            ("000001", "平安银行", "核心观察池"),
+            ("000333", "美的集团", "核心观察池"),
+            ("000651", "格力电器", "核心观察池"),
+            ("600036", "招商银行", "核心观察池"),
+            ("600519", "贵州茅台", "核心观察池"),
+            ("600900", "长江电力", "核心观察池"),
+            ("601318", "中国平安", "核心观察池"),
+            ("300750", "宁德时代", "核心观察池"),
+        ]
+        candidates: list[dict] = []
+        for code, name, board_name in sample_universe:
+            try:
+                daily = self.provider.get_stock_daily(code)
+            except Exception:
+                continue
+            if len(daily) < max(30, self.config.buy_ma_window + 2):
+                continue
+            daily = daily.copy()
+            daily["ma20"] = daily["close"].rolling(self.config.buy_ma_window).mean()
+            prev = daily.iloc[-2]
+            last = daily.iloc[-1]
+            prev_gain_ok = prev["pct_chg"] >= self.config.first_day_gain_pct and prev["close"] > prev["open"]
+            last_gap_ok = (not self.config.second_day_open_gap_positive) or (last["open"] >= prev["close"])
+            last_bull_ok = (not self.config.second_day_bullish) or (last["close"] > last["open"])
+            buy_ok = last["open"] >= last["ma20"]
+            if prev_gain_ok and last_gap_ok and last_bull_ok and buy_ok:
+                candidates.append(asdict(CandidateSignal(
+                    trade_date=str(last["date"].date()),
+                    stock_code=code,
+                    stock_name=name,
+                    board_name=board_name,
+                    float_shares=0.0,
+                    first_day_open=float(prev["open"]),
+                    first_day_close=float(prev["close"]),
+                    second_day_open=float(last["open"]),
+                    second_day_close=float(last["close"]),
+                )))
+        df = pd.DataFrame(candidates)
+        if df.empty:
+            return df
+        return df.head(self.config.max_positions).reset_index(drop=True)
+
+    def select_candidates(self) -> pd.DataFrame:
+        if self.capabilities.get('board_names') and self.capabilities.get('board_cons'):
+            return self._select_board_candidates()
+        if self.capabilities.get('lightweight_screen'):
+            return self._select_lightweight_candidates()
+        return pd.DataFrame()

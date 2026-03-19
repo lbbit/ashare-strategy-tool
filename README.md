@@ -116,7 +116,8 @@ ashare-strategy ui
 ## ⚠️ 当前能力边界
 - 当前不直接连接券商自动下单
 - 当前更适合“辅助决策 + 模拟复盘 + 持仓管理”
-- 实时数据依赖 AkShare 与上游接口，若网络波动可能导致请求失败
+- `akshare` 免费源在真实网络环境下可能不稳定，不建议再把它当成唯一主链路
+- 当前更推荐把 `tinyshare` 作为**稳定模式**来运行：优先使用日线、指数和交易日历能力，牺牲一部分“全市场板块扫描”，换取更高可用性
 
 ## 📚 文档导航
 - [👶 新手详细使用说明](docs/USER_GUIDE.md)
@@ -162,8 +163,9 @@ ashare-strategy backtest --template aggressive --output json
 
 
 ## 数据源补充说明
-- 默认免费体验可使用 `akshare`
-- 若你购买的是 Tinyshare 授权码，可继续选择 `provider: tushare`，并把 `data_source.tushare_sdk` 设为 `tinyshare`，把授权码填写到 `data_source.tushare_token`
+- 默认免费体验仍可使用 `akshare`，但它更适合作为“免费增强源”，不再建议作为唯一稳定主链路
+- 若你购买的是 Tinyshare 授权码，推荐优先使用 `provider: tushare` + `data_source.tushare_sdk: tinyshare`
+- 当前 Tinyshare 模式已新增**轻量稳定筛选路径**：不再强依赖 AkShare 的板块/实时行情接口，而是优先依赖更稳定的日线能力
 
 - 新增 `doctor-data` 命令，可快速检查当前数据源是否可认证、核心接口是否可访问、是否只能回退缓存。
 
@@ -190,3 +192,13 @@ data_source:
   tushare_token: "你的授权码"
 ```
 然后通过 `--config your_config.yaml` 或在工作区里维护自己的配置文件来运行。
+
+### 推荐理解：Tinyshare = 稳定模式
+在当前版本里，更推荐你把 Tinyshare 理解成“稳定模式”：
+- ✅ 更适合 `doctor-data`
+- ✅ 更适合 `screen` 的轻量筛选
+- ✅ 更适合 `backtest` / `plan` / `positions`
+- ⚠️ 当前不追求和 AkShare 一样的全市场板块扫描能力
+
+如果你的目标是“先把工具用起来”，优先选 Tinyshare。
+如果你的目标是“补充更多板块/概念信息”，再额外尝试 AkShare。

@@ -174,7 +174,9 @@ ashare-strategy init-account
 | `stock_name` | 股票名称 | `平安银行` | 建议填 | 便于你自己看懂 |
 | `buy_date` | 买入日期 | `2026-03-18` | 建议填 | 格式建议 `YYYY-MM-DD` |
 | `buy_price` | 买入价格 | `12.34` | 建议填 | 用于参考 |
-| `shares` | 持股数量 | `1000` | 是 | 持仓股数 |
+| `shares` | 持股数量 | `1000` | 是 | 当前总持仓股数 |
+| `available_shares` | 当前可卖数量 | `1000` | 建议填 | T+1、分批卖出时更有参考价值 |
+| `latest_price` | 最新参考价 | `12.50` | 建议填 | 用于估算持仓市值和账户总资产 |
 
 ## 一个更真实的例子
 
@@ -185,14 +187,18 @@ ashare-strategy init-account
     "stock_name": "平安银行",
     "buy_date": "2026-03-10",
     "buy_price": 11.82,
-    "shares": 2000
+    "shares": 2000,
+    "available_shares": 2000,
+    "latest_price": 12.05
   },
   {
     "stock_code": "600519",
     "stock_name": "贵州茅台",
     "buy_date": "2026-03-15",
     "buy_price": 1688.50,
-    "shares": 100
+    "shares": 100,
+    "available_shares": 100,
+    "latest_price": 1692.00
   }
 ]
 ```

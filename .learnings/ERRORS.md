@@ -306,6 +306,36 @@ Use an explicit relative path glob on Windows (for example `.\\ashare-strategy-w
 
 ---
 
+## [ERR-20260319-014] provider_unusable_for_core_user_workflow
+
+**Logged**: 2026-03-19T10:25:05Z
+**Priority**: critical
+**Status**: pending
+**Area**: backend
+
+### Summary
+Current provider strategy leaves the product effectively unusable for real users: AkShare is too unstable for complete runs, while Tinyshare integration lacks the full data surface needed by `screen` and related workflows.
+
+### Error
+```
+AkShare 基本上无法获取完整数据，跑一会儿就失败了，Tinyshare 实现的功能又不全，现在相当于这个工具不可用
+```
+
+### Context
+- User feedback after testing packaged Windows binary with real workflows.
+- AkShare often disconnects mid-run and cannot reliably support screening/backtest flow.
+- Tinyshare provider currently supports only partial endpoints and cannot satisfy board/spot-driven selector requirements.
+- This is not an isolated bug; it blocks the core product promise.
+
+### Suggested Fix
+Redesign the workflow so core commands do not depend on AkShare-only board/spot endpoints. Add a provider capability-aware fallback mode and implement a Tinyshare-compatible screening/backtest path that uses only stable daily/index/trade calendar data. Update account/planning flow so manual holdings analysis remains useful even without full market-wide screening.
+
+### Metadata
+- Reproducible: yes
+- Related Files: src/ashare_strategy/data/providers/tushare.py, src/ashare_strategy/strategies/selector.py, src/ashare_strategy/services/backtest.py, src/ashare_strategy/planner.py, docs/DEVELOPMENT_PLAN.md, AGENTS.md
+
+---
+
 ## [ERR-20260319-012] windows_bundle_init_workspace_and_ui
 
 **Logged**: 2026-03-19T03:02:00Z

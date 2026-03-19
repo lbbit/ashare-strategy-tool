@@ -62,6 +62,10 @@
 | 数据 | 数据源诊断 | 支持 `doctor-data` 健康检查与错误分类 | ✅ |
 | 数据 | 离线模式 | 支持 `screen/backtest/plan --offline` 仅使用缓存 | ✅ |
 | 数据 | Tushare/Tinyshare 兼容 | 支持配置化切换 SDK 与认证信息持久化 | ✅ |
+| 数据 | Provider 能力声明 | 数据源按 `spot/board/daily/lightweight_screen` 等能力区分工作流 | ✅ |
+| 策略 | Tinyshare 轻量稳定筛选 | 无板块/实时接口时走日线驱动的轻量筛选路径 | ✅ |
+| 执行 | 账户视角持仓输出 | `positions` 输出现金/总资产/持仓市值/持仓明细 | ✅ |
+| 执行 | 交易计划预算建议 | `plan` 结合现金、剩余槽位与可卖数量生成预算建议 | ✅ |
 | 工程 | Windows 打包运行修复 | 修复 `init-workspace` 配置读取与 `ui` 启动问题 | ✅ |
 | CLI | 版本查询命令 | 支持 `ashare-strategy version` 查询当前版本 | ✅ |
 | CLI | 选股失败诊断提示 | `screen` 失败时输出友好诊断信息 | ✅ |

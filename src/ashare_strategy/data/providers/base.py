@@ -7,6 +7,18 @@ import pandas as pd
 
 
 class MarketDataProvider(ABC):
+    def capabilities(self) -> dict[str, bool]:
+        return {
+            "spot": False,
+            "board_names": False,
+            "board_hist": False,
+            "board_cons": False,
+            "daily": True,
+            "benchmark_daily": True,
+            "trade_range": True,
+            "lightweight_screen": False,
+        }
+
     @abstractmethod
     def get_stock_daily(self, symbol: str, start_date: Optional[str] = None, end_date: Optional[str] = None) -> pd.DataFrame:
         raise NotImplementedError
