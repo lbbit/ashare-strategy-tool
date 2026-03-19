@@ -5,6 +5,7 @@
 
 ```json
 {
+  "schema_version": "1.0",
   "status": "success",
   "message": "...",
   "data": ...
@@ -15,6 +16,7 @@
 
 ```json
 {
+  "schema_version": "1.0",
   "status": "error",
   "message": "错误说明",
   "data": null
@@ -22,7 +24,7 @@
 ```
 
 ## 稳定性约定
-1. `status` / `message` / `data` 为统一外层字段，后续应尽量保持稳定
+1. `schema_version` / `status` / `message` / `data` 为统一外层字段，后续应尽量保持稳定
 2. 已文档化字段如无必要不要随意改名
 3. 新增字段尽量采用向后兼容方式扩展，不破坏既有 Agent / 脚本解析
 4. 如需破坏性修改，应同步更新本文件、README、USER_GUIDE、AGENTS.md
@@ -31,19 +33,9 @@
 
 ### `screen --output json`
 - `data`: 候选股票数组
-- 每个元素通常包含：
-  - `stock_code`
-  - `stock_name`
-  - 其他筛选结果字段
 
 ### `positions --output json`
 - `data`: 当前持仓数组
-- 每个元素通常包含：
-  - `stock_code`
-  - `stock_name`
-  - `buy_date`
-  - `buy_price`
-  - `shares`
 
 ### `plan --output json`
 - `data.summary`: 计划摘要

@@ -146,3 +146,15 @@ ashare-strategy ui
 - `daily_plan/` 计划目录
 - `custom_strategy.yaml` 配置副本
 - `README.txt` 使用说明文件
+
+## 🧪 策略模板
+现在支持三种模板：
+- `beginner`：新手默认推荐
+- `conservative`：偏稳健
+- `aggressive`：偏激进
+
+例如：
+```bash
+ashare-strategy screen --template conservative
+ashare-strategy backtest --template aggressive --output json
+```

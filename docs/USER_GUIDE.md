@@ -325,3 +325,18 @@ ashare-strategy init-workspace --output json
 - `custom_strategy.yaml`：当前配置副本，方便你后续自己调整参数
 - `reports/`：报告目录
 - `daily_plan/`：每日计划目录
+
+## 1️⃣9️⃣ 策略模板怎么选？
+现在支持三种模板：
+- `beginner`：适合第一次使用，参数更均衡
+- `conservative`：更保守，持股更少、持有时间更长
+- `aggressive`：更激进，持股更多、调仓更快
+
+命令行示例：
+```bash
+ashare-strategy screen --template beginner
+ashare-strategy plan --template conservative
+ashare-strategy backtest --template aggressive
+```
+
+图形界面中也可以直接选择模板。

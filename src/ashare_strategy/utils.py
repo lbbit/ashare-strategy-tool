@@ -10,9 +10,12 @@ def result_to_dataframes(result: dict):
     return candidates, trades, equity
 
 
+SCHEMA_VERSION = "1.0"
+
+
 def success_response(data, message: str = "ok"):
-    return {"status": "success", "message": message, "data": data}
+    return {"schema_version": SCHEMA_VERSION, "status": "success", "message": message, "data": data}
 
 
 def error_response(message: str, data=None):
-    return {"status": "error", "message": message, "data": data}
+    return {"schema_version": SCHEMA_VERSION, "status": "error", "message": message, "data": data}

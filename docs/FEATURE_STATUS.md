@@ -52,3 +52,6 @@
 | CLI | 增强工作区初始化 | `init-workspace` 额外创建报告目录、计划目录和配置副本 | ✅ |
 | UI | 新手操作引导 | 增加推荐操作顺序提示与运行中提示 | ✅ |
 | 文档 | 输出稳定性约定 | CLI 输出 schema 增加字段稳定性约束说明 | ✅ |
+| 策略 | 模板预设 | 支持 beginner / conservative / aggressive 参数模板 | ✅ |
+| UI | 模板选择 | 图形界面支持快速切换策略模板 | ✅ |
+| CLI | schema 版本化 | 结构化输出增加 `schema_version` 字段 | ✅ |

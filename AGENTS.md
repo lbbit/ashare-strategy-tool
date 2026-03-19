@@ -64,3 +64,5 @@ A 股策略选股、回测、每日交易计划、持仓分析、CLI、Web UI、
 - 新增 `docs/CLI_OUTPUT_SCHEMA.md`，后续所有支持 `--output json` 的命令应优先保持该文档中的字段约定稳定
 
 - 结构化 CLI 输出已进入稳定性约定阶段，涉及 JSON 字段调整时必须同步更新 `docs/CLI_OUTPUT_SCHEMA.md`
+
+- 结构化 CLI 输出已增加 `schema_version`，后续如需升级 schema，应保持兼容策略并同步更新文档
