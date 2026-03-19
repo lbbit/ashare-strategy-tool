@@ -1,16 +1,16 @@
 # Release Notes
 
 ## ✨ 本次更新亮点
-- 新增 `doctor-data` 命令，可诊断当前数据源认证、接口可用性与缓存降级状态
-- UI 新增数据源状态展示与一键健康检查
-- AkShare / Tushare(Tinyshare) provider 增加健康检查输出结构，便于普通用户和 AI Agent 排查问题
-- 错误分类更清晰：区分认证失败、权限不足、缓存降级、网络错误
+- `screen` / `backtest` / `plan` 新增 `--offline` 仅缓存模式，网络不稳定时可避免主动联网
+- 业务命令失败时会自动附带数据源诊断信息与友好提示，帮助快速区分网络、认证、权限、缓存问题
+- 新增 `provider_diagnostics` 与 `hint` 结构化错误输出，方便 AI Agent 和脚本集成
+- 配置文件支持持久化 `data_source.offline_mode`
 
 ## 📦 产物
 - `ashare-strategy-windows-x86_64.zip`
 - 源码包
 
 ## 🙌 使用建议
-- 如果数据拉取失败，先执行 `ashare-strategy doctor-data --output json`
-- 若使用 Tinyshare，请确认 `data_source.tushare_sdk: tinyshare`
-- 若 AkShare 出现网络波动，诊断结果会提示是否已退回缓存或完全不可用
+- 如果当天网络差，可优先尝试 `ashare-strategy backtest --offline`
+- 若命令失败，请查看返回中的 `provider_diagnostics` 和 `hint`
+- 建议结合 `ashare-strategy doctor-data` 一起排查数据源问题
