@@ -24,7 +24,7 @@ def screen(config: str = typer.Option("config/default_strategy.yaml", help="配�
     service = TradingService(cfg)
     df = service.screen()
     if output == "json":
-        print(json.dumps(success_response(df.to_dict(orient="records")), ensure_ascii=False, indent=2, default=str))
+        print(json.dumps(success_response(df.to_dict(orient="records"), message="screen completed"), ensure_ascii=False, indent=2, default=str))
         return
     if df.empty:
         print("[yellow]没有筛选到符合条件的股票[/yellow]")
@@ -51,7 +51,7 @@ def backtest(config: str = typer.Option("config/default_strategy.yaml"), initial
         raise typer.Exit(code=1)
     print_json = json.dumps(result, ensure_ascii=False, indent=2, default=str)
     if output == "json":
-        print(json.dumps(success_response(result), ensure_ascii=False, indent=2, default=str))
+        print(json.dumps(success_response(result, message="backtest completed"), ensure_ascii=False, indent=2, default=str))
     else:
         print(print_json)
     if export_csv:
@@ -74,7 +74,7 @@ def plan(config: str = typer.Option("config/default_strategy.yaml"), output_dir:
         print(f"[red]生成交易计划失败：{e}[/red]")
         raise typer.Exit(code=1)
     if output == "json":
-        print(json.dumps(success_response(result['plan']), ensure_ascii=False, indent=2))
+        print(json.dumps(success_response(result['plan'], message="plan generated"), ensure_ascii=False, indent=2))
     else:
         print(json.dumps(result['plan'], ensure_ascii=False, indent=2))
         print(f"[green]交易计划已导出到 {result['output_dir']}[/green]")
@@ -86,7 +86,7 @@ def positions(config: str = typer.Option("config/default_strategy.yaml"), output
     service = TradingService(cfg)
     data = service.load_positions()
     if output == "json":
-        print(json.dumps(success_response(data), ensure_ascii=False, indent=2))
+        print(json.dumps(success_response(data, message="positions loaded"), ensure_ascii=False, indent=2))
     else:
         print(json.dumps(data, ensure_ascii=False, indent=2))
 

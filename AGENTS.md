@@ -56,3 +56,5 @@ A 股策略选股、回测、每日交易计划、持仓分析、CLI、Web UI、
 - 保持 CLI / UI 易用性
 - 保持 Windows 发布链路稳定
 - 提高对普通用户和 AI Agent 的可用性
+
+- 账户来源已开始 router 化，后续可扩展 broker/api/manual 等更多实现
