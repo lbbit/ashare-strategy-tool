@@ -135,3 +135,30 @@ Retry with HTTP/1.1, SSH remote, or a later network retry.
 - Related Files: .learnings/ERRORS.md
 
 ---
+## [ERR-20260319-006] live_backtest_network_dependency
+
+**Logged**: 2026-03-19T00:54:00Z
+**Priority**: medium
+**Status**: pending
+**Area**: backend
+
+### Summary
+CLI live backtest test failed because AkShare spot request was disconnected by remote endpoint.
+
+### Error
+```
+ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+```
+
+### Context
+- Command: PYTHONPATH=src python3 -m ashare_strategy.cli backtest --mode rolling --export-report-dir reports_test
+- Failure happened during `stock_zh_a_spot_em()` live request.
+
+### Suggested Fix
+Add graceful error handling and offline-friendly fallback messaging for live data fetch failures.
+
+### Metadata
+- Reproducible: unknown
+- Related Files: src/ashare_strategy/data/provider.py, src/ashare_strategy/cli.py
+
+---

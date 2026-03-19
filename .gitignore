@@ -2,3 +2,9 @@
 __pycache__/
 *.pyc
 .streamlit/
+data/positions.json
+reports_test/
+dist/
+dist_release/
+build/
+*.spec

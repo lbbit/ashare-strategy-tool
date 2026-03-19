@@ -48,3 +48,9 @@ ashare-strategy ui
 - 绩效指标：年化收益、波动率、夏普、胜率、盈亏比、最大回撤
 - 持仓持久化：支持本地 JSON 持仓文件读写
 - CLI 持仓命令：查看/写入示例持仓
+
+## 文档
+- [详细使用说明](docs/USER_GUIDE.md)
+- [开发计划](docs/DEVELOPMENT_PLAN.md)
+- [功能状态](docs/FEATURE_STATUS.md)
+- [AI 开发说明](AGENTS.md)

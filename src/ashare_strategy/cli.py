@@ -11,6 +11,7 @@ from rich.table import Table
 
 from ashare_strategy.core.config import load_config
 from ashare_strategy.execution.portfolio import TradingService
+from ashare_strategy.reporting import export_report
 
 app = typer.Typer(help="A股策略选股/回测工具")
 
@@ -32,16 +33,23 @@ def screen(config: str = typer.Option("config/default_strategy.yaml", help="配�
 
 
 @app.command()
-def backtest(config: str = typer.Option("config/default_strategy.yaml"), initial_capital: float = 1_000_000, mode: str = typer.Option("rolling", help="rolling/simple"), export_csv: str = typer.Option("", help="导出交易结果 CSV 路径")):
+def backtest(config: str = typer.Option("config/default_strategy.yaml"), initial_capital: float = 1_000_000, mode: str = typer.Option("rolling", help="rolling/simple"), export_csv: str = typer.Option("", help="导出交易结果 CSV 路径"), export_report_dir: str = typer.Option("", help="导出完整报告目录")):
     cfg = load_config(config)
     service = TradingService(cfg)
-    result = service.backtest(initial_capital=initial_capital, mode=mode)
+    try:
+        result = service.backtest(initial_capital=initial_capital, mode=mode)
+    except Exception as e:
+        print(f"[red]回测失败：{e}[/red]")
+        raise typer.Exit(code=1)
     print_json = json.dumps(result, ensure_ascii=False, indent=2, default=str)
     print(print_json)
     if export_csv:
         import pandas as pd
         pd.DataFrame(result.get("trades", [])).to_csv(export_csv, index=False)
         print(f"[green]交易结果已导出到 {export_csv}[/green]")
+    if export_report_dir:
+        files = export_report(result, export_report_dir)
+        print(f"[green]完整报告已导出: {files}[/green]")
 
 
 @app.command()
