@@ -319,3 +319,9 @@ ashare-strategy init-workspace --output json
 - 初始化示例持仓
 - 创建一个工作目录
 - 写入一个说明文件，方便你整理报告和计划
+
+运行 `init-workspace` 后，通常会生成：
+- `README.txt`：工作目录说明
+- `custom_strategy.yaml`：当前配置副本，方便你后续自己调整参数
+- `reports/`：报告目录
+- `daily_plan/`：每日计划目录

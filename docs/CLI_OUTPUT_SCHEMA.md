@@ -21,6 +21,12 @@
 }
 ```
 
+## 稳定性约定
+1. `status` / `message` / `data` 为统一外层字段，后续应尽量保持稳定
+2. 已文档化字段如无必要不要随意改名
+3. 新增字段尽量采用向后兼容方式扩展，不破坏既有 Agent / 脚本解析
+4. 如需破坏性修改，应同步更新本文件、README、USER_GUIDE、AGENTS.md
+
 ## 各命令说明
 
 ### `screen --output json`
@@ -61,3 +67,4 @@
 - `data.positions_initialized`: 是否已初始化持仓
 - `data.output_dir`: 初始化的工作目录
 - `data.files`: 新生成的文件列表
+- `data.directories`: 新生成的目录列表

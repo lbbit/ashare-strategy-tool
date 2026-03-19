@@ -62,3 +62,5 @@ A 股策略选股、回测、每日交易计划、持仓分析、CLI、Web UI、
 - CLI 已新增 `init-account`，用于初始化普通用户的持仓模板，并兼容结构化输出
 
 - 新增 `docs/CLI_OUTPUT_SCHEMA.md`，后续所有支持 `--output json` 的命令应优先保持该文档中的字段约定稳定
+
+- 结构化 CLI 输出已进入稳定性约定阶段，涉及 JSON 字段调整时必须同步更新 `docs/CLI_OUTPUT_SCHEMA.md`

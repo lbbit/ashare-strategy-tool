@@ -138,3 +138,11 @@ ashare-strategy ui
 - **不想总看命令行**：用 `ui`
 
 > ❤️ 如果你愿意，这个工具可以把“手工选股”变成“半自动执行流程”。
+
+## 🧱 首次初始化后会得到什么？
+运行 `ashare-strategy init-workspace` 后，通常会得到：
+- 示例持仓
+- `reports/` 报告目录
+- `daily_plan/` 计划目录
+- `custom_strategy.yaml` 配置副本
+- `README.txt` 使用说明文件

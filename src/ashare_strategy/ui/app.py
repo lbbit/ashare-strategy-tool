@@ -50,13 +50,16 @@ cfg = StrategyConfig(
 service = TradingService(cfg)
 
 st.subheader("🚀 快速操作")
+st.info("建议新手按顺序操作：1）先执行选股；2）再执行回测；3）最后结合持仓和交易计划做判断。")
 col1, col2 = st.columns(2)
 if col1.button("🔎 执行选股"):
+    st.toast("正在执行选股，请稍候...")
     df = service.screen()
     st.subheader("🧾 候选股票")
     st.dataframe(df if not df.empty else pd.DataFrame(), use_container_width=True)
 
 if col2.button("📉 执行回测"):
+    st.toast("正在执行回测，请稍候，首次运行可能较慢...")
     result = service.backtest(initial_capital=initial_capital, mode="rolling")
     st.subheader("📊 回测结果")
     m1, m2, m3, m4 = st.columns(4)

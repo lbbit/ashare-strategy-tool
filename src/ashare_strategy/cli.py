@@ -128,8 +128,13 @@ def init_workspace(
     from pathlib import Path
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
+    reports_dir = out / "reports"
+    plans_dir = out / "daily_plan"
+    reports_dir.mkdir(exist_ok=True)
+    plans_dir.mkdir(exist_ok=True)
     (out / "README.txt").write_text("这是初始化后的工作目录。你可以在这里保存报告、计划和自定义文件。", encoding="utf-8")
-    payload = {"positions_initialized": True, "output_dir": str(out), "files": [str(out / "README.txt")]}
+    (out / "custom_strategy.yaml").write_text(Path(config).read_text(encoding="utf-8"), encoding="utf-8")
+    payload = {"positions_initialized": True, "output_dir": str(out), "files": [str(out / "README.txt"), str(out / "custom_strategy.yaml")], "directories": [str(reports_dir), str(plans_dir)]}
     if output == "json":
         print(json.dumps(success_response(payload, message="workspace initialized"), ensure_ascii=False, indent=2))
     else:
