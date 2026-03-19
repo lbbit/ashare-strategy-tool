@@ -260,3 +260,9 @@ ashare-strategy screen --output json
 ```
 
 这样更适合自动化读取。
+
+```bash
+ashare-strategy plan --output json
+ashare-strategy positions --output json
+```
+这适合给 AI Agent、脚本或自动化流程读取。

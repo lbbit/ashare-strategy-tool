@@ -34,3 +34,6 @@
 | 架构 | 数据源接口抽象 | 增加 provider router 与统一接口基类 | ✅ |
 | 架构 | 服务拆分 | 拆分筛选、回测、持仓服务，降低 TradingService 耦合 | ✅ |
 | CLI | JSON 输出 | screen 命令支持 `--output json` 方便 Agent 集成 | ✅ |
+| 架构 | 账户抽象层 | 新增 Holding 模型与账户仓位仓储接口 | ✅ |
+| CLI | 计划 JSON 输出 | plan 命令支持 `--output json` | ✅ |
+| CLI | 持仓 JSON 输出 | positions 命令支持结构化输出 | ✅ |

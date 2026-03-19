@@ -13,6 +13,7 @@ A 股策略选股、回测、每日交易计划、持仓分析、CLI、Web UI、
 ## 当前架构
 - `src/ashare_strategy/core/`：配置与基础模型
 - `src/ashare_strategy/data/`：当前数据抓取与缓存层
+- `src/ashare_strategy/accounts/`：账户/持仓抽象层，为手工持仓和 API 账户预留扩展点
 - `src/ashare_strategy/strategies/`：策略筛选逻辑
 - `src/ashare_strategy/backtest/`：回测与绩效分析
 - `src/ashare_strategy/execution/`：当前交易服务与持仓持久化

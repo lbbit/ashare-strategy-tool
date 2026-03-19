@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 
 class StrategyConfig(BaseModel):
     data_provider: str = "akshare"
+    account_provider: str = "json"
     data_cache_dir: str = ".cache/market_data"
     use_cache: bool = True
     start_date: Optional[str] = None

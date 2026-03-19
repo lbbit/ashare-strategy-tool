@@ -57,7 +57,7 @@ def backtest(config: str = typer.Option("config/default_strategy.yaml"), initial
 
 
 @app.command()
-def plan(config: str = typer.Option("config/default_strategy.yaml"), output_dir: str = typer.Option("daily_plan", help="导出交易计划目录")):
+def plan(config: str = typer.Option("config/default_strategy.yaml"), output_dir: str = typer.Option("daily_plan", help="导出交易计划目录"), output: str = typer.Option("text", help="输出格式：text/json")):
     cfg = load_config(config)
     service = TradingService(cfg)
     planner = TradingPlanner(service, cfg)
@@ -66,12 +66,15 @@ def plan(config: str = typer.Option("config/default_strategy.yaml"), output_dir:
     except Exception as e:
         print(f"[red]生成交易计划失败：{e}[/red]")
         raise typer.Exit(code=1)
-    print(json.dumps(result['plan'], ensure_ascii=False, indent=2))
-    print(f"[green]交易计划已导出到 {result['output_dir']}[/green]")
+    if output == "json":
+        print(json.dumps(result['plan'], ensure_ascii=False, indent=2))
+    else:
+        print(json.dumps(result['plan'], ensure_ascii=False, indent=2))
+        print(f"[green]交易计划已导出到 {result['output_dir']}[/green]")
 
 
 @app.command()
-def positions(config: str = typer.Option("config/default_strategy.yaml")):
+def positions(config: str = typer.Option("config/default_strategy.yaml"), output: str = typer.Option("text", help="输出格式：text/json")):
     cfg = load_config(config)
     service = TradingService(cfg)
     data = service.load_positions()
